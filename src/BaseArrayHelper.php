@@ -1,6 +1,12 @@
 <?php
 namespace rock\helpers;
 
+if (!function_exists('boolval')) {
+    function boolval($val) {
+        return (bool)$val;
+    }
+}
+
 class BaseArrayHelper
 {
     /**
