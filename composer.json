@@ -1,6 +1,6 @@
 {
     "name": "romeoz/rock-helpers",
-    "description": "Rock Framework extension",
+    "description": "Helpers extension for Rock Framework",
     "keywords": ["helpers"],
     "type": "library",
     "license": "MIT",
