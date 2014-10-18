@@ -1,9 +1,9 @@
 Helpers extension for Rock Framework
 =================
 
-[![Build Status](https://travis-ci.org/romeOz/rock.svg?branch=master)](https://travis-ci.org/romeOz/rock-helpers)
-[![Coverage Status](https://coveralls.io/repos/romeOz/rock/badge.png?branch=master)](https://coveralls.io/r/romeOz/rock-helpers?branch=master)
-[![License](https://poser.pugx.org/romeOz/rock/license.svg)](https://packagist.org/packages/romeOz/rock-helpers)
+[![Build Status](https://travis-ci.org/romeOz/rock-helpers.svg?branch=master)](https://travis-ci.org/romeOz/rock-helpers)
+[![Coverage Status](https://coveralls.io/repos/romeOz/rock-helpers/badge.png?branch=master)](https://coveralls.io/r/romeOz/rock-helpers?branch=master)
+[![License](https://poser.pugx.org/romeOz/rock-helpers/license.svg)](https://packagist.org/packages/romeOz/rock-helpers)
 
 Requirements
 -------------------
