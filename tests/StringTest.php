@@ -14,9 +14,9 @@ class StringTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerValue
      */
-    public function testReplace($value, array $dataReplace, $removeBraces = true, $result)
+    public function testReplace($value, array $placeholders, $removeBraces = true, $result)
     {
-        $this->assertSame($result, String::replace($value, $dataReplace, $removeBraces));
+        $this->assertSame($result, String::replace($value, $placeholders, $removeBraces));
     }
 
     public function providerValue()
@@ -69,4 +69,3 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(String::truncate('Hello', 4), 'Hell...');
     }
 }
- 

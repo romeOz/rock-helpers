@@ -22,9 +22,9 @@ class BaseHelper implements SerializeInterface
     }
 
     /**
-     * Conversion to type
+     * Conversion to type.
      *
-     * @param mixed $value - value
+     * @param mixed $value value
      * @return mixed
      */
     public static function toType($value)
@@ -67,35 +67,20 @@ class BaseHelper implements SerializeInterface
         return $value;
     }
 
-
     /**
-     * Get hash var
+     * Hashing.
      *
      * @param      $value
      * @param int  $serializator
-     * @param bool $recursive - recursive array
      * @return string
      */
-    public static function hash($value, $serializator = self::SERIALIZE_PHP, $recursive = false)
+    public static function hash($value, $serializator = self::SERIALIZE_PHP)
     {
-        if ($value instanceof \Closure) {
-            return md5(Closure::serialize($value));
-        } elseif (is_object($value)) {
+        if (is_object($value)) {
             return md5(serialize($value));
         } elseif(is_array($value)) {
             array_multisort($value);
-            $value = $recursive
-                ?  static::prepareHash(
-                    ArrayHelper::map(
-                        $value,
-                        function($value){
-                                           return $value instanceof \Closure && !is_string($value) ? Closure::serialize($value) : $value;
-                                       },
-                        true
-                    ),
-                    $serializator
-                )
-                : static::prepareHash($value, $serializator);
+            $value = static::prepareHash($value, $serializator);
         }
 
         return md5($value);

@@ -105,7 +105,7 @@ class BaseObjectHelper
     /**
      * Returns the public member variables of an object.
      * This method is provided such that we can get the public member variables of an object.
-     * It is different from "get_object_vars()" because the latter will return private
+     * It is different from `get_object_vars()` because the latter will return private
      * and protected variables if it is called within the object itself.
      *
      * @param object $object the object to be handled
@@ -180,9 +180,9 @@ class BaseObjectHelper
     }
 
     /**
-     * Value to namespace
+     * Value to namespace.
      *
-     * @param string $class - value
+     * @param string $class value
      * @return string
      */
     public static function normalizeNamespace($class)
@@ -219,13 +219,13 @@ class BaseObjectHelper
      * Get result method (dynamic args).
      *
      * @param object|string $object
-     * @param string        $method_name name of method
+     * @param string        $methodName name of method
      * @param array         $args        args of method
      * @return mixed
      */
-    public static function call($object, $method_name, array $args = null)
+    public static function call($object, $methodName, array $args = null)
     {
-        $reflection = new \ReflectionMethod($object, $method_name);
+        $reflection = new \ReflectionMethod($object, $methodName);
         if (empty($args)) {
             return $reflection->invoke($object);
         }

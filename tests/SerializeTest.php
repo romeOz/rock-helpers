@@ -46,4 +46,3 @@ class SerializeTest extends \PHPUnit_Framework_TestCase
         Serialize::unserialize(['foo', 'bar']);
     }
 }
- 

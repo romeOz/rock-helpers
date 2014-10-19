@@ -29,6 +29,4 @@ class BaseException extends \Exception
         $message = String::replace($message, $placeholders);
         parent::__construct($message, 0, $previous);
     }
-
-
 } 

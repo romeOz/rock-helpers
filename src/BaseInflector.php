@@ -2,9 +2,9 @@
 namespace rock\helpers;
 
 /**
- * BaseInflector provides concrete implementation for [[Inflector]].
+ * BaseInflector provides concrete implementation for @see Inflector .
  *
- * Do not use BaseInflector. Use [[Inflector]] instead.
+ * Do not use BaseInflector. Use @see Inflector instead.
  */
 class BaseInflector
 {

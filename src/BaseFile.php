@@ -39,7 +39,7 @@ class BaseFile
     }
 
     /**
-     * Delete of file.
+     * Deleting of file.
      *
      * @param string $path path to file.
      * @return bool
@@ -54,7 +54,7 @@ class BaseFile
     }
 
     /**
-     * Rename file.
+     * Renaming file.
      *
      * @param string $oldPath old path
      * @param string $newPath new path
@@ -72,7 +72,7 @@ class BaseFile
      * Determines the MIME type of the specified file.
      * This method will first try to determine the MIME type based on
      * [finfo_open](http://php.net/manual/en/function.finfo-open.php). If this doesn't work, it will
-     * fall back to [[getMimeTypeByExtension()]].
+     * fall back to @see getMimeTypeByExtension() .
      * @param string $file the file name.
      * @param string $magicFile name of the optional magic database file, usually something like `/path/to/magic.mime`.
      * This will be passed as the second parameter to [finfo_open](http://php.net/manual/en/function.finfo-open.php).
@@ -252,8 +252,7 @@ class BaseFile
     /**
      * Checks if the given file path satisfies the filtering options.
      * @param string $path the path of the file or directory to be checked
-     * @param array $options the filtering options. See [[findFiles()]] for explanations of
-     * the supported options.
+     * @param array $options the filtering options.
      * @return bool whether the file or directory satisfies the filtering options.
      */
     public static function filterPath($path, $options)

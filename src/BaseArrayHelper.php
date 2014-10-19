@@ -80,7 +80,8 @@ class BaseArrayHelper
 
     /**
      * Filter values of array.
-     * Note: if callback is null, then removed all the null values in array.
+     *
+     * > Note: if callback is null, then removed all the null values in array.
      *
      * @param array           $array
      * @param callable|string $function
@@ -277,9 +278,9 @@ class BaseArrayHelper
      *
      * @param array      $array current array
      * @param string|int $key  key to move
-     * @param int        $move constant
-     *                         - `MOVE_HEAD` move head
-     *                         - `MOVE_TAIL` move tail
+     * @param int        $move constant:
+     * - `MOVE_HEAD`: move head
+     * - `MOVE_TAIL`: move tail
      * @return array
      */
     public static function moveElement(array $array, $key, $move = self::MOVE_HEAD)
@@ -589,7 +590,7 @@ class BaseArrayHelper
      *
      * If a key value is null, the corresponding array element will be discarded and not put in the result.
      *
-     * For example:
+     * Example:
      *
      * ```php
      * $array = [
@@ -715,8 +716,8 @@ class BaseArrayHelper
      *
      * @param array  $array     current array
      * @param string $separator  separator
-     * @param int    $const     constant
-     *                          - `ESCAPE` escape value quotes
+     * @param int    $const     constant:
+     * - `ESCAPE`: escape value quotes
      * @return array
      */
     public static function concatKeyValue(array $array, $separator = '=', $const = 0)

@@ -63,7 +63,7 @@ class BaseSerialize implements SerializeInterface
     }
 
     /**
-     * Validation is serialized
+     * Validation is serialized.
      *
      * @param string $value
      * @return bool

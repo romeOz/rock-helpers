@@ -11,9 +11,9 @@ namespace rock\helpers;
 class BaseJson
 {
     /**
-     * Validation value is json
+     * Validation value is json.
      *
-     * @param mixed $value - value
+     * @param mixed $value value
      * @return bool
      */
     public static function is($value)
@@ -28,6 +28,7 @@ class BaseJson
 
     /**
      * To normalize
+     *
      * @param string $json
      * @return string
      */
@@ -58,7 +59,7 @@ class BaseJson
     }
 
     /**
-     * Converting json to array
+     * Converting json to array.
      *
      * @param string $json
      * @param bool   $asArray
@@ -71,9 +72,7 @@ class BaseJson
         if (empty($json)) {
             return null;
         }
-
         $decode = json_decode((string) $json, $asArray);
-
         if ($throwException === true) {
             switch (json_last_error()) {
                 case JSON_ERROR_NONE:
@@ -100,12 +99,9 @@ class BaseJson
         return $decode;
     }
 
-
-
     /**
      * Pre-processes the data before sending it to `json_encode()`.
      * @param mixed $data the data to be processed
-
      * @return mixed the processed data
      */
     protected static function processData($data)
