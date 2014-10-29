@@ -221,8 +221,7 @@ class BaseString
     }
 
     /**
-     * Begin trim words (or).
-     *
+     * Begin trim words (or)
      * @param string      $string
      * @param array $words
      * @return string
@@ -234,19 +233,18 @@ class BaseString
      */
     public static function ltrimWords($string, array $words)
     {
-        return static::trimPattern($string, '/^('.preg_quote(implode('|', $words), '/').')/u');
+        return static::trimPattern($string, '/^('.implode('|', $words).')\\s?/u');
     }
 
     /**
-     * End trim words (or).
-     *
+     * End trim words (or)
      * @param string      $string
      * @param array $words
      * @return string
      */
     public static function rtrimWords($string, array $words)
     {
-        return static::trimPattern($string, '/('.preg_quote(implode('|', $words), '/').')$/u');
+        return static::trimPattern($string, '/\\s?('.implode('|', $words).')$/u');
     }
 
     /**
@@ -255,7 +253,7 @@ class BaseString
      * @param string $string string
      * @return string
      */
-    public static function trimSpaces($string)
+    public static function removeSpaces($string)
     {
         return static::trimPattern($string, '/\s+/i');
     }
@@ -285,41 +283,21 @@ class BaseString
     }
 
     /**
-     * Trim a list of characters from a string.
-     *
-     * @param string $string   string
-     * @param array  $chars array of characters to delete.
-     * @return string
-     */
-    public static function trimChars($string, array $chars = [])
-    {
-        if (empty($chars)) {
-            $chars = [
-                '*', '@', '%', '#', '!', '?', '.', ')', '(',
-                '+', '=', '~', ':', '.', '«', '»', '`', '\'',
-                '"', '/', '\\', '“', '”'
-            ];
-        }
-
-        return str_replace($chars, "", $string);
-    }
-
-    /**
-     * Get string transliteration.
+     * Get string transliteration
      *
      * @param string $string string
      * @return string
      */
     public static function translit($string)
     {
-        $ret = [
-            'А' => 'a', 'Б' => 'b', 'В' => 'v', 'Г' => 'g',
-            'Д' => 'd', 'Е' => 'e', 'Ж' => 'j', 'З' => 'z', 'И' => 'i',
-            'Й' => 'y', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
-            'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't',
-            'У' => 'u', 'Ф' => 'f', 'Х' => 'h', 'Ц' => 'ts', 'Ч' => 'ch',
-            'Ш' => 'sh', 'Щ' => 'sch', 'Ъ' => "", 'Ы' => 'yi', 'Ь' => "",
-            'Э' => 'e', 'Ю' => 'yu', 'Я' => 'ya', 'а' => 'a', 'б' => 'b',
+        $replace = [
+            'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G',
+            'Д' => 'D', 'Е' => 'E', 'Ж' => 'J', 'З' => 'Z', 'И' => 'I',
+            'Й' => 'Y', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N',
+            'О' => 'O', 'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T',
+            'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'Ts', 'Ч' => 'Ch',
+            'Ш' => 'Sh', 'Щ' => 'Sch', 'Ъ' => "", 'Ы' => 'Yi', 'Ь' => "",
+            'Э' => 'E', 'Ю' => 'Yu', 'Я' => 'Ya', 'а' => 'a', 'б' => 'b',
             'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ж' => 'j',
             'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l',
             'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r',
@@ -327,17 +305,16 @@ class BaseString
             'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch', 'ъ' => 'y',
             'ы' => 'yi', 'ь' => "", 'э' => 'e', 'ю' => 'yu', 'я' => 'ya'
         ];
-
-        return strtr($string, $ret);
+        return strtr($string, $replace);
     }
 
     /**
-     * Generator of random character string.
+     * Generator of random character string
      *
-     * @param int $len length of string
+     * @param int $length length of string
      * @return string
      */
-    public static function randChars($len = 6)
+    public static function randChars($length = 6)
     {
         $chars     = [
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
@@ -349,9 +326,9 @@ class BaseString
 
         $result = '';
         $count = count($chars) - 1;
-        while ($len > 0) {
+        while ($length > 0) {
             $result .= $chars[mt_rand(0, $count)];
-            --$len;
+            --$length;
         }
 
         return $result;
@@ -463,7 +440,7 @@ class BaseString
     /**
      * Validate value is regexp pattern
      *
-     * @param string $subject string
+     * @param string $subject - string
      * @return bool
      */
     public static function isRegexp(&$subject)
