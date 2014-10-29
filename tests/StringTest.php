@@ -68,4 +68,20 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(String::truncate('Hello', 7), 'Hello');
         $this->assertSame(String::truncate('Hello', 4), 'Hell...');
     }
+
+    public function testTranslit()
+    {
+        $this->assertSame('foo', String::translit('foo'));
+        $this->assertSame('AbV', String::translit('АбВ'));
+    }
+
+    public function testStristr()
+    {
+        $this->assertSame('fOo', String::stritr('fOo', []));
+        $this->assertSame('fRR', String::stritr('fOo', ['t' => 'k', 'o' => 'R']));
+        $this->assertSame('аЁЁ', String::stritr('аЁЁ', ['в' => 'п', 'б' => 'Ё']));
+
+        $this->assertSame('fRR', String::stritr('fOo', 'o', 'R'));
+        $this->assertSame('аЁЁ', String::stritr('аБб', 'б', 'Ё'));
+    }
 }
