@@ -309,6 +309,52 @@ class BaseString
     }
 
     /**
+     * Translate characters or replace substrings (case insensitive version of strtr).
+     *
+     * @param string $string
+     * @param string|array $from
+     * @param string|null $to
+     * @link http://php.net/manual/ru/function.strtr.php#82051
+     * @return string
+     */
+    public static function stritr($string, $from, $to = null)
+    {
+        if(function_exists('stritr')) {
+            return stritr($string, $from, $to);
+        }
+        $encoding = 'UTF-8';
+        if (is_string($from) ){
+            $to = strval($to);
+            $from = mb_substr($from, 0, min(mb_strlen($from, $encoding), mb_strlen($to, $encoding)), $encoding);
+            $to = mb_substr($to, 0, min(mb_strlen($from, $encoding), mb_strlen($to, $encoding)), $encoding);
+            $product = strtr($string, (mb_strtoupper($from, $encoding) . mb_strtolower($from, $encoding)), ($to . $to));
+            return $product;
+        } elseif(is_array($from)){
+            $pos1 = 0;
+            $product = $string;
+            while(count($from) > 0){
+                $positions = [];
+                foreach($from as $_from => $to){
+                    if(($pos2 = mb_stripos($product, $_from, $pos1, $encoding)) === false){
+                        unset($from[$_from]);
+                    } else{
+                        $positions[$_from] = $pos2;
+                    }
+                }
+                if (count($from) <= 0) {
+                    break;
+                }
+                $winner = min($positions);
+                $key = array_search($winner, $positions);
+                $product = (mb_substr($product, 0, $winner, $encoding) . $from[$key] . mb_substr($product, $winner + mb_strlen($key, $encoding), null, $encoding));
+                $pos1 = ($winner + mb_strlen($from[$key], $encoding));
+            }
+            return $product;
+        }
+        return $string;
+    }
+
+    /**
      * Generator of random character string
      *
      * @param int $length length of string
