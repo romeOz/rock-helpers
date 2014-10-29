@@ -24,14 +24,14 @@ class BaseString
      * Returns the portion of string specified by the start and length parameters.
      * This method ensures the string is treated as a byte array by using `mb_substr()`.
      * @param string $string the input string. Must be one character or longer.
-     * @param integer $start the starting position
-     * @param integer $length the desired portion length
+     * @param int $start the starting position
+     * @param int|null $length the desired portion length
      * @return string the extracted part of string, or FALSE on failure or an empty string.
      * @see http://www.php.net/manual/en/function.substr.php
      */
-    public static function byteSubstr($string, $start, $length)
+    public static function byteSubstr($string, $start, $length = null)
     {
-        return mb_substr($string, $start, $length, '8bit');
+        return mb_substr($string, $start, $length === null ? mb_strlen($string, '8bit') : $length, '8bit');
     }
 
     /**
@@ -180,17 +180,6 @@ class BaseString
     }
 
     /**
-     * Escaping slashes.
-     *
-     * @param string $string string
-     * @return string
-     */
-    public static function addSlashes($string)
-    {
-        return addslashes($string);
-    }
-
-    /**
      * Escape string single-quotes.
      *
      * @param string $string string
@@ -273,13 +262,19 @@ class BaseString
 
     /**
      * Check contains word or char in string.
-     * @param $string
-     * @param $contains
+     *
+     * @param string     $string
+     * @param string     $contains
+     * @param bool $identical
      * @return bool
      */
-    public static function contains($string, $contains)
+    public static function contains($string, $contains, $identical = false)
     {
-        return strpos($string, $contains) !== false;
+        $encoding = 'UTF-8';
+        if ($identical === false) {
+            return false !== mb_stripos($string, $contains, 0, $encoding);
+        }
+        return false !== mb_strpos($string, $contains, 0, $encoding);
     }
 
     /**
@@ -484,9 +479,9 @@ class BaseString
     }
 
     /**
-     * Validate value is regexp pattern
+     * Check value is regexp pattern.
      *
-     * @param string $subject - string
+     * @param string $subject string
      * @return bool
      */
     public static function isRegexp(&$subject)
@@ -522,7 +517,54 @@ class BaseString
         if (($pos = mb_strrpos($path, '/')) !== false) {
             return mb_substr($path, $pos + 1);
         }
-
         return $path;
+    }
+
+    /**
+     * Check if given string starts with specified substring.
+     * Binary and multibyte safe.
+     *
+     * @param string $string Input string
+     * @param string $with Part to search
+     * @param bool $caseSensitive Case sensitive search. Default is true.
+     * @return bool Returns true if first input starts with second input, false otherwise
+     */
+    public static function startsWith($string, $with, $caseSensitive = true)
+    {
+        if (!$bytes = static::byteLength($with)) {
+            return true;
+        }
+        $ecoding = 'UTF-8';
+        if ($caseSensitive) {
+            return strncmp($string, $with, $bytes) === 0;
+        } else {
+            return mb_strtolower(mb_substr($string, 0, $bytes, '8bit'), $ecoding) === mb_strtolower($with, $ecoding);
+        }
+    }
+
+    /**
+     * Check if given string ends with specified substring.
+     * Binary and multibyte safe.
+     *
+     * @param string $string
+     * @param string $with
+     * @param bool $caseSensitive Case sensitive search. Default is true.
+     * @return bool Returns true if first input ends with second input, false otherwise
+     */
+    public static function endsWith($string, $with, $caseSensitive = true)
+    {
+        if (!$bytes = static::byteLength($with)) {
+            return true;
+        }
+        $ecoding = 'UTF-8';
+        if ($caseSensitive) {
+            // Warning check, see http://php.net/manual/en/function.substr-compare.php#refsect1-function.substr-compare-returnvalues
+            if (static::byteLength($string) < $bytes) {
+                return false;
+            }
+            return substr_compare($string, $with, -$bytes, $bytes) === 0;
+        } else {
+            return mb_strtolower(mb_substr($string, -$bytes, null, '8bit'), $ecoding) === mb_strtolower($with, $ecoding);
+        }
     }
 }
