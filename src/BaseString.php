@@ -3,7 +3,7 @@ namespace rock\helpers;
 
 
 /**
- * Helper "StringBase"
+ * Helper "BaseString"
  *
  * @package rock\helpers
  */
@@ -265,13 +265,13 @@ class BaseString
      *
      * @param string     $string
      * @param string     $contains
-     * @param bool $identical
+     * @param bool $caseSensitive Case sensitive search. Default is false.
      * @return bool
      */
-    public static function contains($string, $contains, $identical = false)
+    public static function contains($string, $contains, $caseSensitive = false)
     {
         $encoding = 'UTF-8';
-        if ($identical === false) {
+        if ($caseSensitive === false) {
             return false !== mb_stripos($string, $contains, 0, $encoding);
         }
         return false !== mb_strpos($string, $contains, 0, $encoding);
