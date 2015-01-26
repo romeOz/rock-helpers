@@ -1,6 +1,6 @@
 {
     "name": "romeoz/rock-helpers",
-    "description": "Helpers extension for Rock Framework",
+    "description": "Helpers module for Rock Framework",
     "keywords": ["helpers"],
     "type": "library",
     "license": "MIT",
@@ -15,8 +15,13 @@
             "email": "serggalka@gmail.com"
         }
     ],
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/romeOz/rock-base"
+    }],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "romeoz/rock-base" : "*@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "4.2.*"
