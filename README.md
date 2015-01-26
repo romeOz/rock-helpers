@@ -1,4 +1,4 @@
-Helpers extension for Rock Framework
+Helpers module for Rock Framework
 =================
 
 [![Build Status](https://travis-ci.org/romeOz/rock-helpers.svg?branch=master)](https://travis-ci.org/romeOz/rock-helpers)
@@ -12,4 +12,4 @@ Requirements
 License
 -------------------
 
-Helpers extension for Rock Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Helpers module for Rock Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
