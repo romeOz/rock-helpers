@@ -73,6 +73,6 @@ class Serialize implements SerializeInterface
      */
     public static function is($value)
     {
-        return is_string($value) && @unserialize($value);
+        return is_string($value) && ($value === 'b:0;' || @unserialize($value));
     }
 }
