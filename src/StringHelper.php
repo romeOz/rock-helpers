@@ -1,13 +1,12 @@
 <?php
 namespace rock\helpers;
 
-
 /**
- * Helper "BaseString"
+ * Helper "String"
  *
  * @package rock\helpers
  */
-class BaseString
+class StringHelper
 {
     /**
      * Returns the number of bytes in the given string.
@@ -216,8 +215,8 @@ class BaseString
      * @return string
      *
      * ```php
-     * String::ltrimWord('foo text', ['foo', 'bar']); // ' text'
-     * String::ltrimWord('bar text', ['foo', 'bar']); // ' text'
+     * StringHelper::ltrimWord('foo text', ['foo', 'bar']); // ' text'
+     * StringHelper::ltrimWord('bar text', ['foo', 'bar']); // ' text'
      * ```
      */
     public static function ltrimWords($string, array $words)
@@ -275,32 +274,6 @@ class BaseString
             return false !== mb_stripos($string, $contains, 0, $encoding);
         }
         return false !== mb_strpos($string, $contains, 0, $encoding);
-    }
-
-    /**
-     * Get string transliteration
-     *
-     * @param string $string string
-     * @return string
-     */
-    public static function translit($string)
-    {
-        $replace = [
-            'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G',
-            'Д' => 'D', 'Е' => 'E', 'Ж' => 'J', 'З' => 'Z', 'И' => 'I',
-            'Й' => 'Y', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N',
-            'О' => 'O', 'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T',
-            'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'Ts', 'Ч' => 'Ch',
-            'Ш' => 'Sh', 'Щ' => 'Sch', 'Ъ' => "", 'Ы' => 'Yi', 'Ь' => "'",
-            'Э' => 'E', 'Ю' => 'Yu', 'Я' => 'Ya', 'а' => 'a', 'б' => 'b',
-            'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ж' => 'j',
-            'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l',
-            'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r',
-            'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h',
-            'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch', 'ъ' => 'y',
-            'ы' => 'yi', 'ь' => "'", 'э' => 'e', 'ю' => 'yu', 'я' => 'ya'
-        ];
-        return strtr($string, $replace);
     }
 
     /**
@@ -420,8 +393,8 @@ class BaseString
      * @return null|string
      *
      * ```php
-     * String::lconcat('world', 'hello '); // hello world
-     * String::lconcat(null, ' hello '); // null
+     * StringHelper::lconcat('world', 'hello '); // hello world
+     * StringHelper::lconcat(null, ' hello '); // null
      * ```
      */
     public static function lconcat(&$value, $concat, $default = null)
@@ -437,8 +410,8 @@ class BaseString
      * @return null|string
      *
      * ```php
-     * String::rconcat('hello', ' world'); // hello world
-     * String::rconcat(null, ' world'); // null
+     * StringHelper::rconcat('hello', ' world'); // hello world
+     * StringHelper::rconcat(null, ' world'); // null
      * ```
      */
     public static function rconcat(&$value, $concat, $default = null)
@@ -463,17 +436,17 @@ class BaseString
 
         if (strpos($string, '{') !== false) {
             return trim(preg_replace_callback(
-                $pattern,
-                function($match) use ($placeholders, $removeBraces) {
-                    if (isset($placeholders[$match[1]])) {
-                        return $placeholders[$match[1]];
-                    } elseif ($removeBraces){
-                        return '';
-                    }
-                    return $match[0];
-                },
-                $string
-            ));
+                            $pattern,
+                            function($match) use ($placeholders, $removeBraces) {
+                                if (isset($placeholders[$match[1]])) {
+                                    return $placeholders[$match[1]];
+                                } elseif ($removeBraces){
+                                    return '';
+                                }
+                                return $match[0];
+                            },
+                            $string
+                        ));
         }
         return $string;
     }

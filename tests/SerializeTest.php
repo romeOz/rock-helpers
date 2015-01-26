@@ -1,9 +1,10 @@
 <?php
 
-namespace rockunit\core\helpers;
+namespace rockunit;
 
 
 use rock\helpers\Serialize;
+use rock\helpers\SerializeException;
 
 /**
  * @group base
@@ -42,7 +43,8 @@ class SerializeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(Serialize::unserialize(['foo', 'bar'], false), ['foo', 'bar']);
 
         // Exception
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(SerializeException::className());
         Serialize::unserialize(['foo', 'bar']);
     }
 }
+ 

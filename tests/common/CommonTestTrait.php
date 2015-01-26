@@ -3,14 +3,14 @@
 namespace rockunit\common;
 
 
-use rock\helpers\File;
+use rock\helpers\FileHelper;
 
-trait CommonTrait
+trait CommonTestTrait
 {
     protected static function clearRuntime()
     {
         $runtime = ROCKUNIT_RUNTIME;
-        File::deleteDirectory($runtime);
+        FileHelper::deleteDirectory($runtime);
     }
 
     protected static function sort($value)

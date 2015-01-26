@@ -1,11 +1,16 @@
 <?php
+
 namespace rock\helpers;
 
-
-class BaseNumeric
+/**
+ * Helper "Numeric"
+ *
+ * @package rock\helpers
+ */
+class NumericHelper
 {
     /**
-     * Is parity.
+     * Check is parity.
      *
      * @param int $value numeric
      * @return boolean

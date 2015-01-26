@@ -1,8 +1,9 @@
 <?php
 
-namespace rockunit\core\helpers;
+namespace rockunit;
 
 use rock\helpers\Json;
+use rock\helpers\JsonException;
 
 /**
  * @group base
@@ -47,7 +48,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 
         // exception
         $json = '{"a":1,"b":2';
-        $this->setExpectedException('\Exception');
+        $this->setExpectedException(JsonException::className());
         Json::decode($json);
     }
 

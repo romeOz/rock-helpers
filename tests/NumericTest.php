@@ -1,23 +1,27 @@
 <?php
 
-namespace rockunit\core\helpers;
+namespace rockunit;
 
 
-use rock\helpers\Numeric;
+use rock\helpers\NumericHelper;
 
+/**
+ * @group base
+ * @group helpers
+ */
 class NumericTest extends \PHPUnit_Framework_TestCase
 {
     public function testParity()
     {
-        $this->assertTrue(Numeric::isParity(2));
-        $this->assertFalse(Numeric::isParity(3));
+        $this->assertTrue(NumericHelper::isParity(2));
+        $this->assertFalse(NumericHelper::isParity(3));
     }
 
     public function testToNumeric()
     {
-        $this->assertSame(Numeric::toNumeric('3.14'), 3.14);
-        $this->assertSame(Numeric::toNumeric('7'), 7);
-        $this->assertSame(Numeric::toNumeric('foo'), 0);
+        $this->assertSame(NumericHelper::toNumeric('3.14'), 3.14);
+        $this->assertSame(NumericHelper::toNumeric('7'), 7);
+        $this->assertSame(NumericHelper::toNumeric('foo'), 0);
     }
 }
  

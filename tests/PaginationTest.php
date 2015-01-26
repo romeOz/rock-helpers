@@ -1,8 +1,6 @@
 <?php
 
-namespace rockunit\core\helpers;
-
-
+namespace rockunit;
 
 use rock\helpers\Pagination;
 
