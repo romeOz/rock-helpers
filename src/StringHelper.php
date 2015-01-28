@@ -376,13 +376,13 @@ class StringHelper
      * Get all the words with uppercase.
      *
      * @param string $string string
-     * @return string
+     * @return array
      */
     public static function getWordsUppFirst($string)
     {
-        preg_match_all('/\b[A-Z]+\\w*/', $string, $match);
+        preg_match_all('/\b[A-ZА-ЯЁ]+\\w*/u', $string, $match);
 
-        return $match;
+        return !empty($match[0]) ? $match[0] : [];
     }
 
     /**
