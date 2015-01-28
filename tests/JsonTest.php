@@ -31,6 +31,8 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 
         $data = (object) null;
         $this->assertSame('{}', Json::encode($data));
+
+        $this->assertSame(json_encode('{"a":1,"b":2}'), Json::encode(new CustomJson(['a' => 1, 'b' => 2])));
     }
 
     public function testDecode()
@@ -63,5 +65,28 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse(Json::is(null));
     }
+
+    public function testNormalize()
+    {
+        $json = <<<EOD
+{"a":1,\n\r"b":2}
+EOD;
+
+        $this->assertSame('{"a":1,"b":2}', Json::normalize($json));
+    }
 }
- 
+
+class CustomJson implements \JsonSerializable
+{
+    protected $data;
+
+    function __construct(array $data)
+    {
+        $this->data = $data;
+    }
+
+    public function jsonSerialize()
+    {
+        return json_encode($this->data);
+    }
+}

@@ -54,5 +54,27 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0.0, Helper::clearByType(7.7));
         $this->assertSame(0.0, Helper::clearByType(7.7));
         $this->assertSame('', Helper::clearByType('test'));
+
+        $object = new Foo();
+        $object->name = 'Jerry';
+        $this->assertAttributeContains('Tom', 'name', Helper::clearByType($object));
+
+        $object = new Bar();
+        $object->name = 'Jerry';
+        $this->assertAttributeContains('John', 'name', Helper::clearByType($object));
+    }
+}
+
+
+class Foo {
+    public $name = 'Tom';
+}
+
+class Bar {
+    public $name = 'Tom';
+
+    public function reset()
+    {
+        $this->name = 'John';
     }
 }

@@ -26,6 +26,7 @@ class TraceTest extends \PHPUnit_Framework_TestCase
 
     public function testTrace()
     {
+        $this->assertEmpty(Trace::getIterator('test'));
         Trace::trace('test', 'test...');
         $this->assertSame(count(Trace::get('test')), 1);
 

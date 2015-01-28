@@ -59,6 +59,13 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('', StringHelper::upperFirst(''));
     }
 
+    public function testWordsUpperFirst()
+    {
+        $this->assertCount(2, StringHelper::getWordsUppFirst('Привет Мир'));
+        $this->assertCount(1, StringHelper::getWordsUppFirst('привет Мир'));
+        $this->assertCount(0, StringHelper::getWordsUppFirst('foo'));
+    }
+
     public function testLowerFirst()
     {
         $this->assertSame('foO', StringHelper::lowerFirst('FoO'));
@@ -77,12 +84,14 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testTruncate()
     {
+        $this->assertSame('', StringHelper::truncate('', 7));
         $this->assertSame('Hello', StringHelper::truncate('Hello', 7));
         $this->assertSame('Hell...', StringHelper::truncate('Hello', 4));
     }
 
     public function testStristr()
     {
+        $this->assertSame('fOo', StringHelper::stritr('fOo', null));
         $this->assertSame('fOo', StringHelper::stritr('fOo', []));
         $this->assertSame('fRR', StringHelper::stritr('fOo', ['t' => 'k', 'o' => 'R']));
         $this->assertSame('аЁЁ', StringHelper::stritr('аЁЁ', ['в' => 'п', 'б' => 'Ё']));
@@ -105,6 +114,11 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('text', StringHelper::rtrimWords('text bar', $words));
         $this->assertSame('hello world', StringHelper::rtrimWords('hello world', $words));
         $this->assertSame('foo hello world!', StringHelper::rtrimWords('foo hello world!', $words));
+    }
+
+    public function testRandChars()
+    {
+        $this->assertNotEmpty(StringHelper::randChars());
     }
 
     public function testReplaceRandChars()

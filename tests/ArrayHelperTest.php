@@ -530,6 +530,139 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(ArrayHelper::getValue($object, 'baz'), 'text');
     }
 
+    public function testKeyExists()
+    {
+        $array = [
+            'a' => 1,
+            'B' => 2,
+        ];
+        $this->assertTrue(ArrayHelper::keyExists('a', $array));
+        $this->assertFalse(ArrayHelper::keyExists('b', $array));
+        $this->assertTrue(ArrayHelper::keyExists('B', $array));
+        $this->assertFalse(ArrayHelper::keyExists('c', $array));
+
+        $this->assertTrue(ArrayHelper::keyExists('a', $array, false));
+        $this->assertTrue(ArrayHelper::keyExists('b', $array, false));
+        $this->assertTrue(ArrayHelper::keyExists('B', $array, false));
+        $this->assertFalse(ArrayHelper::keyExists('c', $array, false));
+    }
+
+    public function testMultisort()
+    {
+        // single key
+        $array = [
+            ['name' => 'b', 'age' => 3],
+            ['name' => 'a', 'age' => 1],
+            ['name' => 'c', 'age' => 2],
+        ];
+        ArrayHelper::multisort($array, 'name');
+        $this->assertEquals(['name' => 'a', 'age' => 1], $array[0]);
+        $this->assertEquals(['name' => 'b', 'age' => 3], $array[1]);
+        $this->assertEquals(['name' => 'c', 'age' => 2], $array[2]);
+
+        // multiple keys
+        $array = [
+            ['name' => 'b', 'age' => 3],
+            ['name' => 'a', 'age' => 2],
+            ['name' => 'a', 'age' => 1],
+        ];
+        ArrayHelper::multisort($array, ['name', 'age']);
+        $this->assertEquals(['name' => 'a', 'age' => 1], $array[0]);
+        $this->assertEquals(['name' => 'a', 'age' => 2], $array[1]);
+        $this->assertEquals(['name' => 'b', 'age' => 3], $array[2]);
+
+        // case-insensitive
+        $array = [
+            ['name' => 'a', 'age' => 3],
+            ['name' => 'b', 'age' => 2],
+            ['name' => 'B', 'age' => 4],
+            ['name' => 'A', 'age' => 1],
+        ];
+
+        ArrayHelper::multisort($array, ['name', 'age'], SORT_ASC, [SORT_STRING, SORT_REGULAR]);
+        $this->assertEquals(['name' => 'A', 'age' => 1], $array[0]);
+        $this->assertEquals(['name' => 'B', 'age' => 4], $array[1]);
+        $this->assertEquals(['name' => 'a', 'age' => 3], $array[2]);
+        $this->assertEquals(['name' => 'b', 'age' => 2], $array[3]);
+
+        ArrayHelper::multisort($array, ['name', 'age'], SORT_ASC, [SORT_STRING | SORT_FLAG_CASE, SORT_REGULAR]);
+        $this->assertEquals(['name' => 'A', 'age' => 1], $array[0]);
+        $this->assertEquals(['name' => 'a', 'age' => 3], $array[1]);
+        $this->assertEquals(['name' => 'b', 'age' => 2], $array[2]);
+        $this->assertEquals(['name' => 'B', 'age' => 4], $array[3]);
+    }
+
+    public function testMerge()
+    {
+        $a = [
+            'name' => 'Rock',
+            'version' => 'beta',
+            'options' => [
+                'namespace' => false,
+                'unittest' => false,
+            ],
+            'features' => [
+                'mvc',
+            ],
+        ];
+        $b = [
+            'version' => '1.1',
+            'options' => [
+                'unittest' => true,
+            ],
+            'features' => [
+                'gii',
+            ],
+        ];
+        $c = [
+            'version' => '2.0',
+            'options' => [
+                'namespace' => true,
+            ],
+            'features' => [
+                'debug',
+            ],
+        ];
+
+        $result = ArrayHelper::merge($a, $b, $c);
+        $expected = [
+            'name' => 'Rock',
+            'version' => '2.0',
+            'options' => [
+                'namespace' => true,
+                'unittest' => true,
+            ],
+            'features' => [
+                'mvc',
+                'gii',
+                'debug',
+            ],
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testIndex()
+    {
+        $array = [
+            ['id' => '123', 'data' => 'abc'],
+            ['id' => '345', 'data' => 'def'],
+        ];
+        $result = ArrayHelper::index($array, 'id');
+        $this->assertEquals([
+            '123' => ['id' => '123', 'data' => 'abc'],
+            '345' => ['id' => '345', 'data' => 'def'],
+        ], $result);
+
+        $result = ArrayHelper::index($array, function ($element) {
+            return $element['data'];
+        });
+        $this->assertEquals([
+            'abc' => ['id' => '123', 'data' => 'abc'],
+            'def' => ['id' => '345', 'data' => 'def'],
+        ], $result);
+    }
+
     public function testGetColumn()
     {
         $array = [
@@ -542,16 +675,16 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['123', '345'], $result);
 
         $result = ArrayHelper::getColumn($array, function ($element) {
-                return $element['data'];
-            });
+            return $element['data'];
+        });
         $this->assertEquals(['a' => 'abc', 'b' => 'def'], $result);
         $result = ArrayHelper::getColumn($array, function ($element) {
-                return $element['data'];
-            }, false);
+            return $element['data'];
+        }, false);
         $this->assertEquals(['abc', 'def'], $result);
     }
 
-    public function testIntersectByKeys()
+   public function testIntersectByKeys()
     {
         $this->assertSame(ArrayHelper::intersectByKeys(['foo'=> 'foo', 'bar' => 'bar'], ['bar']), ['bar' => 'bar']);
     }
@@ -570,5 +703,92 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 
         // recursive
         $this->assertSame(ArrayHelper::map(['foo' => 'foo', 'bar' => ['baz' => 'baz']], $callback, true), ['foo' => 'test', 'bar' => ['baz' => 'test']]);
+    }
+
+    public function testIsAssociative()
+    {
+        $this->assertFalse(ArrayHelper::isAssociative('test'));
+        $this->assertFalse(ArrayHelper::isAssociative([]));
+        $this->assertFalse(ArrayHelper::isAssociative([1, 2, 3]));
+        $this->assertTrue(ArrayHelper::isAssociative(['name' => 1, 'value' => 'test']));
+        $this->assertFalse(ArrayHelper::isAssociative(['name' => 1, 'value' => 'test', 3]));
+        $this->assertTrue(ArrayHelper::isAssociative(['name' => 1, 'value' => 'test', 3], false));
+    }
+
+    public function testIsIndexed()
+    {
+        $this->assertFalse(ArrayHelper::isIndexed('test'));
+        $this->assertTrue(ArrayHelper::isIndexed([]));
+        $this->assertTrue(ArrayHelper::isIndexed([1, 2, 3]));
+        $this->assertTrue(ArrayHelper::isIndexed([2 => 'a', 3 => 'b']));
+        $this->assertFalse(ArrayHelper::isIndexed([2 => 'a', 3 => 'b'], true));
+    }
+
+    public function testHtmlEncode()
+    {
+        $array = [
+            'abc' => '123',
+            '<' => '>',
+            'cde' => false,
+            3 => 'blank',
+            [
+                '<>' => 'a<>b',
+                '23' => true,
+            ]
+        ];
+        $this->assertEquals([
+            'abc' => '123',
+            '<' => '&gt;',
+            'cde' => false,
+            3 => 'blank',
+            [
+                '<>' => 'a&lt;&gt;b',
+                '23' => true,
+            ]
+        ], ArrayHelper::htmlEncode($array));
+        $this->assertEquals([
+            'abc' => '123',
+            '&lt;' => '&gt;',
+            'cde' => false,
+            3 => 'blank',
+            [
+                '&lt;&gt;' => 'a&lt;&gt;b',
+                '23' => true,
+            ]
+        ], ArrayHelper::htmlEncode($array, false));
+    }
+
+    public function testHtmlDecode()
+    {
+        $array = [
+            'abc' => '123',
+            '&lt;' => '&gt;',
+            'cde' => false,
+            3 => 'blank',
+            [
+                '<>' => 'a&lt;&gt;b',
+                '23' => true,
+            ]
+        ];
+        $this->assertEquals([
+            'abc' => '123',
+            '&lt;' => '>',
+            'cde' => false,
+            3 => 'blank',
+            [
+                '<>' => 'a<>b',
+                '23' => true,
+            ]
+        ], ArrayHelper::htmlDecode($array));
+        $this->assertEquals([
+            'abc' => '123',
+            '<' => '>',
+            'cde' => false,
+            3 => 'blank',
+            [
+                '<>' => 'a<>b',
+                '23' => true,
+            ]
+        ], ArrayHelper::htmlDecode($array, false));
     }
 }

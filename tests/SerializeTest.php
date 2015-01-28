@@ -46,5 +46,33 @@ class SerializeTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(SerializeException::className());
         Serialize::unserialize(['foo', 'bar']);
     }
+
+    public function testUnserializeRecursive()
+    {
+        $input = [
+            'name' => 'Tom',
+            'about' => [
+                'discr' => json_encode(['foo' => 'text foo', 'bar' => 7])
+            ],
+            'test' => json_encode(['foo' => 'text foo', 'bar' => 'bar text'])
+        ];
+        $expected = [
+            'name' => 'Tom',
+            'about' =>
+                [
+                    'discr' =>
+                        [
+                            'foo' => 'text foo',
+                            'bar' => 7,
+                        ],
+                ],
+            'test' =>
+                [
+                    'foo' => 'text foo',
+                    'bar' => 'bar text',
+                ],
+        ];
+        $this->assertSame($expected, Serialize::unserializeRecursive($input));
+    }
 }
  
