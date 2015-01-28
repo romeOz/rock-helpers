@@ -26,7 +26,6 @@ class Json
         return json_last_error() === JSON_ERROR_NONE;
     }
 
-
     /**
      * To normalize.
      *
@@ -40,7 +39,6 @@ class Json
 
         return preg_replace('/(,)\s*}$/', '}', $json);
     }
-
 
     /**
      * Encodes the given value into a JSON string.
