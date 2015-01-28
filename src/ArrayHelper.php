@@ -870,7 +870,9 @@ class ArrayHelper
             if (is_string($value)) {
                 $d[$key] = htmlspecialchars($value, ENT_QUOTES, $charset);
             } elseif (is_array($value)) {
-                $d[$key] = static::htmlEncode($value, $charset);
+                $d[$key] = static::htmlEncode($value, $valuesOnly, $charset);
+            } else {
+                $d[$key] = $value;
             }
         }
 
@@ -900,6 +902,8 @@ class ArrayHelper
                 $d[$key] = htmlspecialchars_decode($value, ENT_QUOTES);
             } elseif (is_array($value)) {
                 $d[$key] = static::htmlDecode($value);
+            } else {
+                $d[$key] = $value;
             }
         }
 
