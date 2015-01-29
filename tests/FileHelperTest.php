@@ -44,14 +44,14 @@ class FileHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testDirname()
     {
-        $this->assertSame(ROCKUNIT_RUNTIME . 'cache', FileHelper::dirname(ROCKUNIT_RUNTIME . 'cache\\file.tmp'));
+        $this->assertSame(ROCKUNIT_RUNTIME . '/cache', FileHelper::dirname(ROCKUNIT_RUNTIME . '\\cache\\file.tmp'));
         $this->assertSame('', FileHelper::dirname('file.tmp'));
     }
 
     public function testGetMimeTypeByExtension()
     {
-        $this->assertTrue(FileHelper::create(ROCKUNIT_RUNTIME . 'cache/file.doc', 'text'));
-        $this->assertSame('application/msword', FileHelper::getMimeTypeByExtension(ROCKUNIT_RUNTIME . 'cache/file.doc'));
+        $this->assertTrue(FileHelper::create(ROCKUNIT_RUNTIME . '/cache/file.doc', 'text'));
+        $this->assertSame('application/msword', FileHelper::getMimeTypeByExtension(ROCKUNIT_RUNTIME . '/cache/file.doc'));
     }
 
     /**
@@ -59,8 +59,8 @@ class FileHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
-        $this->assertTrue(FileHelper::delete(ROCKUNIT_RUNTIME . 'cache/file.doc'));
-        $this->assertFalse(FileHelper::delete(ROCKUNIT_RUNTIME . 'cache/file.doc'));
+        $this->assertTrue(FileHelper::delete(ROCKUNIT_RUNTIME . '/cache/file.doc'));
+        $this->assertFalse(FileHelper::delete(ROCKUNIT_RUNTIME . '/cache/file.doc'));
     }
 
     /**
@@ -106,11 +106,6 @@ class FileHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(is_dir(ROCKUNIT_RUNTIME . '/cache_copy'));
         $this->assertFalse(FileHelper::deleteDirectory(ROCKUNIT_RUNTIME));
     }
-
-//    public function testNormalizePath()
-//    {
-//        $this->assertSame('to/path/folder', FileHelper::normalizePath('to/path\\folder/'));
-//    }
 
     public function testNormalizePath()
     {

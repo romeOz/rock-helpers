@@ -18,4 +18,4 @@ $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = 'site.com';
 $_SERVER['REQUEST_URI'] = '/';
 date_default_timezone_set('UTC');
 
-define('ROCKUNIT_RUNTIME', __DIR__ . '/runtime/');
+defined('ROCKUNIT_RUNTIME') or define('ROCKUNIT_RUNTIME', __DIR__ . '/runtime');
