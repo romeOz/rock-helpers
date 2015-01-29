@@ -31,6 +31,97 @@ class ArrayHelper
      */
     const MOVE_TAIL = 0x02;
 
+    /**
+     * Retrieves the value of an array element or object property with the given key or property name.
+     * If the key does not exist in the array or object, the default value will be returned instead.
+     *
+     * The key may be specified in a dot format to retrieve the value of a sub-array or the property
+     * of an embedded object. In particular, if the key is `x.y.z`, then the returned value would
+     * be `$array['x']['y']['z']` or `$array->x->y->z` (if `$array` is an object). If `$array['x']`
+     * or `$array->x` is neither an array nor an object, the default value will be returned.
+     * Note that if the array already has an element `x.y.z`, then its value will be returned
+     * instead of going through the sub-arrays.
+     *
+     * Below are some usage examples,
+     *
+     * ```php
+     * // working with array
+     * $username = ArrayHelper::getValue($_POST, 'username');
+     * // working with object
+     * $username = ArrayHelper::getValue($user, 'username');
+     * // working with anonymous function
+     * $fullName = ArrayHelper::getValue($user, function($user, $defaultValue) {
+     *     return $user->firstName . ' ' . $user->lastName;
+     * });
+     * // using dot format to retrieve the property of embedded object
+     * $street = ArrayHelper::get($users, 'address.street');
+     * ```
+     *
+     * @param array|object          $array   array or object to extract value from
+     * @param string|array|callable $key     key name of the array element, or property name of the object,
+     *                                       or an anonymous function returning the value. The anonymous function signature should be:
+     *                                       `function($array, $defaultValue)`.
+     * @param mixed                 $default the default value to be returned if the specified key does not exist
+     * @return mixed the value of the element if found, default value otherwise
+     */
+    public static function getValue($array, $key, $default = null)
+    {
+        if (empty($array)) {
+            return $default;
+        }
+        if ($key instanceof \Closure) {
+            return $key($array, $default);
+        }
+        if (is_object($array) && is_array($key)) {
+            $key = implode('.', $key);
+        }
+        if (is_array($array) && is_array($key)) {
+            return static::keyAsArray($array, $key, $default);
+        }
+        if (is_array($array) && array_key_exists($key, $array)) {
+            return $array[$key];
+        }
+        if (($pos = strrpos($key, '.')) !== false) {
+            $array = static::getValue($array, substr($key, 0, $pos), $default);
+            $key = substr($key, $pos + 1);
+        }
+        if (is_object($array)) {
+            return $array->$key;
+        } elseif (is_array($array)) {
+            return array_key_exists($key, $array) ? $array[$key] : $default;
+        } else {
+            return $default;
+        }
+    }
+
+    /**
+     * Set value in array.
+     *
+     * @param array        $array
+     * @param array|string $keys  chain keys of the array element
+     * @param mixed        $value value of array
+     * @return array
+     */
+    public static function setValue(array &$array, $keys, $value = null)
+    {
+        if (empty($keys)) {
+            return $array;
+        }
+        if (is_string($keys)) {
+            $keys = explode('.', $keys);
+        }
+        $current = &$array;
+        foreach ($keys as $key) {
+            if (!is_array($current) || empty($current[$key])) {
+                $current[$key] = [];
+            }
+            $current = &$current[$key];
+        }
+        $current = $value;
+
+        return $array;
+    }
+
     public static function updateValue(array $array, array $keys, callable $callback /* , $args... */)
     {
         $args = array_slice(func_get_args(), 3);
@@ -119,34 +210,6 @@ class ArrayHelper
         }
 
         return $result;
-    }
-
-    /**
-     * Set value in array.
-     *
-     * @param array        $array
-     * @param array|string $keys  chain keys of the array element
-     * @param mixed        $value value of array
-     * @return array
-     */
-    public static function setValue(array &$array, $keys, $value = null)
-    {
-        if (empty($keys)) {
-            return $array;
-        }
-        if (is_string($keys)) {
-            $keys = explode('.', $keys);
-        }
-        $current = &$array;
-        foreach ($keys as $key) {
-            if (!is_array($current) || empty($current[$key])) {
-                $current[$key] = [];
-            }
-            $current = &$current[$key];
-        }
-        $current = $value;
-
-        return $array;
     }
 
     /**
@@ -292,8 +355,10 @@ class ArrayHelper
      * @param array      $array current array
      * @param string|int $key   key to move
      * @param int        $move  constant
-     *                          - `MOVE_HEAD` move head
-     *                          - `MOVE_TAIL` move tail
+     *
+     * - `MOVE_HEAD` move head
+     * - `MOVE_TAIL` move tail
+     *
      * @return array
      */
     public static function moveElement(array $array, $key, $move = self::MOVE_HEAD)
@@ -315,219 +380,127 @@ class ArrayHelper
     }
 
     /**
-     * Get found element by value.
+     * Contains value.
+     *
+     * @param string $needle needle value
+     * @param array  $array  current array
+     * @return bool
+     */
+    public static function contains($needle, array $array)
+    {
+        return (bool)static::search($needle, $array);
+    }
+
+    /**
+     * Search element by value.
      *
      * @param string $needle needle value
      * @param array  $array  current array
      * @param array  $keys   trace keys
-     * @param bool   $toArray
-     * @return array|bool
+     * @return array
      */
-    public static function search($needle, array $array, array &$keys = null, $toArray = true)
+    public static function search($needle, array $array, array &$keys = null)
     {
         $needle = '/^' . preg_quote($needle, '/') . '$/i';
 
-        return static::_search($needle, $array, $keys, 0, $toArray);
+        return static::_searchInternal($needle, $array, $keys, 0);
     }
 
     /**
-     * Search.
-     *
-     * @param string $needle needle value/key
-     * @param array  $array  current array
-     * @param array  $keys   trace keys
-     * @param int    $const  constants
-     * @param bool   $toArray
-     * @throws ArrayException
-     * @return string|array
-     */
-    private static function  _search($needle, array $array, array &$keys = null, $const = 0, $toArray = true)
-    {
-        if (!is_string($needle)) {
-            return null;
-        }
-        try {
-            $iterator =
-                new \RegexIterator(
-                    new \RecursiveIteratorIterator(
-                        new \RecursiveArrayIterator($array)
-                    ),
-                    $needle,
-                    \RegexIterator::MATCH,
-                    $const
-                );
-            if ($toArray === true) {
-                return iterator_to_array($iterator);
-            }
-            $result = [];
-            /** @var \RecursiveIteratorIterator $iterator */
-            foreach ($iterator as $value) {
-                $result[$iterator->key()] = $value;
-                $_keys = [];
-                foreach (range(0, $iterator->getDepth()) as $depth) {
-                    $_keys[] = $iterator->getSubIterator($depth)->key();
-                }
-                $keys[$iterator->key()] = $_keys;
-            }
-        } catch (\Exception $e) {
-            throw new ArrayException($e->getMessage(), [], $e);
-        }
-        $iterator = null;
-
-        return $result;
-    }
-
-    /**
-     * Get found elements by value.
+     * Search all elements by value.
      *
      * @param string $needle needle value
      * @param array  $array  current array
      * @param array  $keys   trace keys
-     * @param bool   $toArray
-     * @return array|null
+     * @return array
      */
-    public static function searchAll($needle, array $array, array &$keys = null, $toArray = true)
+    public static function searchAll($needle, array $array, array &$keys = null)
     {
         $needle = '/^' . preg_quote($needle, '/') . '$/i';
 
-        return static::_searchAll($needle, $array, $keys, 0, $toArray);
+        return static::_searchAllInternal($needle, $array, $keys, 0);
     }
 
     /**
-     * Search All.
-     *
-     * @param string $needle needle value/key
-     * @param array  $array  current array
-     * @param array  $keys   trace keys
-     * @param int    $const  constants
-     * @param bool   $toArray
-     * @throws ArrayException
-     * @return null|array
-     */
-    private static function  _searchAll($needle, array $array, array &$keys = null, $const = 0, $toArray = true)
-    {
-        if (!is_string($needle)) {
-            return null;
-        }
-        try {
-            $iterator =
-                new \RegexIterator(
-                    new \RecursiveIteratorIterator(
-                        new \RecursiveArrayIterator($array)
-                    ),
-                    $needle,
-                    \RegexIterator::MATCH,
-                    $const
-                );
-            if ($toArray === true) {
-                return iterator_to_array($iterator);
-            }
-            $result = [];
-            /** @var \RecursiveIteratorIterator $iterator */
-            foreach ($iterator as $value) {
-                $result[] = [
-                    'key' => $iterator->key(),
-                    'value' => $value
-                ];
-                $_keys = [];
-                foreach (range(0, $iterator->getDepth()) as $depth) {
-                    $_keys[] = $iterator->getSubIterator($depth)->key();
-                }
-                $keys[][$iterator->key()] = $_keys;
-            }
-        } catch (\Exception $e) {
-            throw new ArrayException($e->getMessage(), [], $e);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get found element by key.
+     * Search element by key.
      *
      * @param string $needle needle key
      * @param array  $array  current array
      * @param array  $keys   trace keys
-     * @param bool   $toArray
-     * @return array|null
+     * @return array
      */
-    public static function searchKey($needle, array $array, array &$keys = null, $toArray = true)
+    public static function searchByKey($needle, array $array, array &$keys = null)
     {
         $needle = '/^' . preg_quote($needle, '/') . '$/i';
 
-        return static::_search($needle, $array, $keys, \RegexIterator::USE_KEY, $toArray);
+        return static::_searchInternal($needle, $array, $keys, \RegexIterator::USE_KEY);
     }
 
     /**
-     * Get found elements by key.
+     * Search all elements by key.
      *
      * @param string $needle needle key
      * @param array  $array  current array
      * @param array  $keys   trace keys
-     * @param bool   $toArray
-     * @return array|null
+     * @return array
      */
-    public static function searchAllKey($needle, array $array, array &$keys = null, $toArray = true)
+    public static function searchAllByKey($needle, array $array, array &$keys = null)
     {
         $needle = '/^' . preg_quote($needle, '/') . '$/i';
 
-        return static::_searchAll($needle, $array, $keys, \RegexIterator::USE_KEY, $toArray);
+        return static::_searchAllInternal($needle, $array, $keys, \RegexIterator::USE_KEY);
     }
 
     /**
-     * Get found element by value (use RegExp-pattern).
+     * Search element by value (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
      * @param array  $array   current array
      * @param array  $keys    trace keys
-     * @param bool   $toArray
-     * @return array|null
+     * @return array
      */
-    public static function pregSearch($pattern, array $array, array &$keys = null, $toArray = true)
+    public static function pregSearch($pattern, array $array, array &$keys = null)
     {
-        return static::_search($pattern, $array, $keys, 0, $toArray);
+        return static::_searchInternal($pattern, $array, $keys, 0);
     }
 
     /**
-     * Get found elements by value (use RegExp-pattern).
+     * Search all elements by value (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
      * @param array  $array   current array
      * @param array  $keys    trace keys
-     * @param bool   $toArray
-     * @return array|null
+     * @return array
      */
-    public static function pregSearchAll($pattern, array $array, array &$keys = null, $toArray = true)
+    public static function pregSearchAll($pattern, array $array, array &$keys = null)
     {
-        return static::_searchAll($pattern, $array, $keys, 0, $toArray);
+        return static::_searchAllInternal($pattern, $array, $keys, 0);
     }
 
     /**
-     * Get found element by key (use RegExp-pattern).
+     * Search element by key (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
      * @param array  $array   current array
      * @param array  $keys    trace keys
-     * @param bool   $toArray
-     * @return array|null
+     * @return array
      */
-    public static function pregSearchKey($pattern, array $array, array &$keys = null, $toArray = true)
+    public static function pregSearchByKey($pattern, array $array, array &$keys = null)
     {
-        return static::_search($pattern, $array, $keys, \RegexIterator::USE_KEY, $toArray);
+        return static::_searchInternal($pattern, $array, $keys, \RegexIterator::USE_KEY);
     }
 
     /**
-     * Get found elements by key (use RegExp-pattern).
+     * Search all elements by key (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
      * @param array  $array   current array
      * @param array  $keys    trace keys
-     * @param bool   $toArray
-     * @return array|null
+     * @return array
      */
-    public static function pregSearchAllKey($pattern, array $array, array &$keys = null, $toArray = true)
+    public static function pregSearchAllByKey($pattern, array $array, array &$keys = null)
     {
-        return static::_searchAll($pattern, $array, $keys, \RegexIterator::USE_KEY, $toArray);
+        return static::_searchAllInternal($pattern, $array, $keys, \RegexIterator::USE_KEY);
     }
 
     /**
@@ -543,55 +516,17 @@ class ArrayHelper
     {
         $result = [];
         foreach ($array as $key => $val) {
-            if (isset($indexKey) &&
-                isset($val[$indexKey])
-            ) {
+            if (isset($indexKey) && isset($val[$indexKey])) {
                 $key = $val[$indexKey];
             }
-            if (
-                $multi === true
-            ) {
-                $result[$key][] = static::_filterColumn($keys, $val);
+            if ($multi) {
+                $result[$key][] = static::_filterColumnInternal($keys, $val);
                 continue;
             }
-            $result[$key] = static::_filterColumn($keys, $val);
+            $result[$key] = static::_filterColumnInternal($keys, $val);
         }
 
         return $result;
-    }
-
-    /**
-     * Filter by Column
-     *
-     * @param array|string|null $keys
-     * @param array             $value value of array
-     * @return array|null
-     */
-    private static function _filterColumn($keys = null, array $value)
-    {
-        if (empty($keys)) {
-            return $value;
-        } elseif (is_array($keys)) {
-            return array_filter(
-                $value,
-                function () use (&$value, $keys) {
-                    if (in_array(key($value), $keys)) {
-                        next($value);
-
-                        return true;
-                    }
-                    next($value);
-
-                    return false;
-                }
-            );
-        } else {
-            if (isset($value[$keys])) {
-                return $value[$keys];
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -636,69 +571,6 @@ class ArrayHelper
         }
 
         return $result;
-    }
-
-    /**
-     * Retrieves the value of an array element or object property with the given key or property name.
-     * If the key does not exist in the array or object, the default value will be returned instead.
-     *
-     * The key may be specified in a dot format to retrieve the value of a sub-array or the property
-     * of an embedded object. In particular, if the key is `x.y.z`, then the returned value would
-     * be `$array['x']['y']['z']` or `$array->x->y->z` (if `$array` is an object). If `$array['x']`
-     * or `$array->x` is neither an array nor an object, the default value will be returned.
-     * Note that if the array already has an element `x.y.z`, then its value will be returned
-     * instead of going through the sub-arrays.
-     *
-     * Below are some usage examples,
-     *
-     * ```php
-     * // working with array
-     * $username = ArrayHelper::getValue($_POST, 'username');
-     * // working with object
-     * $username = ArrayHelper::getValue($user, 'username');
-     * // working with anonymous function
-     * $fullName = ArrayHelper::getValue($user, function($user, $defaultValue) {
-     *     return $user->firstName . ' ' . $user->lastName;
-     * });
-     * // using dot format to retrieve the property of embedded object
-     * $street = ArrayHelper::get($users, 'address.street');
-     * ```
-     *
-     * @param array|object          $array   array or object to extract value from
-     * @param string|array|callable $key     key name of the array element, or property name of the object,
-     *                                       or an anonymous function returning the value. The anonymous function signature should be:
-     *                                       `function($array, $defaultValue)`.
-     * @param mixed                 $default the default value to be returned if the specified key does not exist
-     * @return mixed the value of the element if found, default value otherwise
-     */
-    public static function getValue($array, $key, $default = null)
-    {
-        if (empty($array)) {
-            return $default;
-        }
-        if ($key instanceof \Closure) {
-            return $key($array, $default);
-        }
-        if (is_object($array) && is_array($key)) {
-            $key = implode('.', $key);
-        }
-        if (is_array($array) && is_array($key)) {
-            return static::keyAsArray($array, $key, $default);
-        }
-        if (is_array($array) && array_key_exists($key, $array)) {
-            return $array[$key];
-        }
-        if (($pos = strrpos($key, '.')) !== false) {
-            $array = static::getValue($array, substr($key, 0, $pos), $default);
-            $key = substr($key, $pos + 1);
-        }
-        if (is_object($array)) {
-            return $array->$key;
-        } elseif (is_array($array)) {
-            return array_key_exists($key, $array) ? $array[$key] : $default;
-        } else {
-            return $default;
-        }
     }
 
     /**
@@ -764,7 +636,7 @@ class ArrayHelper
      *     ['id' => '345', 'name' => 'ccc', 'class' => 'y'],
      * ];
      *
-     * $result = ArrayHelper::map($array, 'id', 'name');
+     * $result = ArrayHelper::group($array, 'id', 'name');
      * // the result is:
      * // [
      * //     '123' => 'aaa',
@@ -772,7 +644,7 @@ class ArrayHelper
      * //     '345' => 'ccc',
      * // ]
      *
-     * $result = ArrayHelper::map($array, 'id', 'name', 'class');
+     * $result = ArrayHelper::group($array, 'id', 'name', 'class');
      * // the result is:
      * // [
      * //     'x' => [
@@ -807,22 +679,29 @@ class ArrayHelper
         return $result;
     }
 
-    public static function toType(array $array)
+    /**
+     * Conversion to type of array values.
+     *
+     * @param array $array current array
+     * @param bool $recursive
+     * @return array
+     */
+    public static function toType(array $array, $recursive = true)
     {
         return static::map(
             $array,
             function ($value) {
                 return Helper::toType($value);
             },
-            true
+            $recursive
         );
     }
 
     /**
-     * Depth
+     * Depth array.
      *
      * @param array $array     current array
-     * @param bool  $onlyFirst only first element
+     * @param bool  $onlyFirst check only first element
      * @throws ArrayException
      * @return int
      */
@@ -1095,6 +974,13 @@ class ArrayHelper
         }
     }
 
+    /**
+     * Returns only the specified key/value pairs from the array.
+     * @param array $array current array
+     * @param array $only included keys
+     * @param array $exclude excluded keys
+     * @return array
+     */
     public static function only(array $array = [], array $only = [], array $exclude = [])
     {
         if (empty($array)) {
@@ -1153,5 +1039,95 @@ class ArrayHelper
         }
 
         return $res;
+    }
+
+    private static function _searchInternal($needle, array $array, array &$keys = null, $const = 0)
+    {
+        try {
+            $iterator =
+                new \RegexIterator(
+                    new \RecursiveIteratorIterator(
+                        new \RecursiveArrayIterator($array)
+                    ),
+                    $needle,
+                    \RegexIterator::MATCH,
+                    $const
+                );
+
+            $result = [];
+            /** @var \RecursiveIteratorIterator $iterator */
+            foreach ($iterator as $value) {
+                $result[$iterator->key()] = $value;
+                $keys = [];
+                foreach (range(0, $iterator->getDepth()) as $depth) {
+                    $keys[] = $iterator->getSubIterator($depth)->key();
+                }
+                break;
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            throw new ArrayException($e->getMessage(), [], $e);
+        }
+    }
+
+    private static function _searchAllInternal($needle, array $array, array &$keys = null, $const = 0)
+    {
+        try {
+            $iterator =
+                new \RegexIterator(
+                    new \RecursiveIteratorIterator(
+                        new \RecursiveArrayIterator($array)
+                    ),
+                    $needle,
+                    \RegexIterator::MATCH,
+                    $const
+                );
+
+            $result = [];
+            /** @var \RecursiveIteratorIterator $iterator */
+            foreach ($iterator as $value) {
+                $result[] = [
+                    'key' => $iterator->key(),
+                    'value' => $value
+                ];
+                $_keys = [];
+                foreach (range(0, $iterator->getDepth()) as $depth) {
+                    $_keys[] = $iterator->getSubIterator($depth)->key();
+                }
+                $keys[][$iterator->key()] = $_keys;
+            }
+        } catch (\Exception $e) {
+            throw new ArrayException($e->getMessage(), [], $e);
+        }
+
+        return $result;
+    }
+
+    private static function _filterColumnInternal($keys = null, array $value)
+    {
+        if (empty($keys)) {
+            return $value;
+        } elseif (is_array($keys)) {
+            return array_filter(
+                $value,
+                function () use (&$value, $keys) {
+                    if (in_array(key($value), $keys)) {
+                        next($value);
+
+                        return true;
+                    }
+                    next($value);
+
+                    return false;
+                }
+            );
+        } else {
+            if (isset($value[$keys])) {
+                return $value[$keys];
+            }
+        }
+
+        return null;
     }
 }

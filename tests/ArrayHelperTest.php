@@ -2,6 +2,7 @@
 
 namespace rockunit;
 
+use rock\helpers\ArrayException;
 use rock\helpers\ArrayHelper;
 use rock\helpers\Json;
 use rock\helpers\Serialize;
@@ -387,7 +388,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
             [
                 ['type' => 'A', 'options' => ['name' => 'option_1', 'params' => ['param1', 'param2']]],
                 ['type' => 'A', 'options' => ['name' => 'option_1']],
-                ['options', 'params']
+                'options.params'
             ],
 
             [
@@ -439,6 +440,92 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testSetValue()
+    {
+        $array = [
+            'name' => 'test',
+            'post' => [
+                'id' => 5,
+                'author' => [
+                    'name' => 'romeo',
+                    'profile' => [
+                        'title' => '1337',
+                    ],
+                ],
+            ],
+            'admin' => [
+                'lastname' => 'romeo',
+            ],
+        ];
+
+        // update
+        $this->assertSame('Tom', ArrayHelper::setValue($array, 'post.author.name', 'Tom')['post']['author']['name']);
+
+        // set
+        $this->assertSame('Sawyer', ArrayHelper::setValue($array, 'post.author.lastname', 'Sawyer')['post']['author']['lastname']);
+
+        // empty keys
+        $this->assertSame($array, ArrayHelper::setValue($array, '', 'Sawyer'));
+    }
+
+    public function testUpdateValue()
+    {
+        $array = [
+            'name' => 'test',
+            'post' => [
+                'id' => 5,
+                'author' => [
+                    'name' => 'romeo',
+                    'profile' => [
+                        'title' => '1337',
+                    ],
+                ],
+            ],
+            'admin' => [
+                'lastname' => 'romeo',
+            ],
+        ];
+        $callback = function($value){
+            if ($value == 'romeo') {
+                return 'Tom';
+            }
+            return $value;
+        };
+        $this->assertSame('Tom', ArrayHelper::updateValue($array, ['post', 'author', 'name'], $callback)['post']['author']['name']);
+
+        // condition is false
+        $this->assertSame('1337', ArrayHelper::updateValue($array, ['post', 'author', 'profile', 'title'], $callback)['post']['author']['profile']['title']);
+
+        // unknown
+        $this->assertSame($array, ArrayHelper::updateValue($array, [], $callback));
+    }
+
+    public function testUpdateValueThrowException()
+    {
+        $array = [
+            'name' => 'test',
+            'post' => [
+                'id' => 5,
+                'author' => [
+                    'name' => 'romeo',
+                    'profile' => [
+                        'title' => '1337',
+                    ],
+                ],
+            ],
+            'admin' => [
+                'lastname' => 'romeo',
+            ],
+        ];
+        $callback = function($value){
+            if ($value == 'romeo') {
+                return 'Tom';
+            }
+            return $value;
+        };
+        $this->setExpectedException(ArrayException::className());
+        ArrayHelper::updateValue($array, ['post', 'author', 'lastname'], $callback);
+    }
 
     /**
      * @dataProvider valueProvider
@@ -518,6 +605,11 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testGetValueEmpty()
+    {
+        $this->assertSame('unknown', ArrayHelper::getValue([], 'name', 'unknown'));
+    }
+
     public function testGetValueAsObject()
     {
         $object = new \stdClass();
@@ -528,6 +620,298 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(ArrayHelper::getValue($object, 'foo.bar'), 'test');
         $this->assertSame(ArrayHelper::getValue($object, ['foo', 'bar']), 'test');
         $this->assertSame(ArrayHelper::getValue($object, 'baz'), 'text');
+    }
+
+    public function testSearch()
+    {
+        $input = [
+            '_1' => [
+                '_1.1' => false
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => true,
+                    '_2.1.2' => 7.7,
+                    '_2.1.3' => 'foo text',
+                ]
+            ],
+            '_3' => null,
+            '_4' => 7.7,
+            '_5' => 'foo text',
+        ];
+
+
+        $this->assertArrayHasKey('_2.1.2', ArrayHelper::search(7.7,$input, $keys));
+        $this->assertSame(['_2', '_2.1', '_2.1.2',], $keys);
+
+        $keys = [];
+        $this->assertArrayHasKey('_1.1', ArrayHelper::search(null,$input, $keys));
+        $this->assertSame(['_1', '_1.1'], $keys);
+
+        // not
+        $keys = [];
+        $this->assertEmpty(ArrayHelper::search('unknown', $input, $keys));
+        $this->assertEmpty($keys);
+
+        // regexp
+        $keys = [];
+        $this->assertArrayHasKey('_2.1.3', ArrayHelper::pregSearch('/text$/',$input, $keys));
+        $this->assertSame(['_2', '_2.1', '_2.1.3',], $keys);
+    }
+
+    public function testContains()
+    {
+        $input = [
+            '_1' => [
+                '_1.1' => false
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => true,
+                    '_2.1.2' => 7.7,
+                    '_2.1.3' => 'foo text',
+                ]
+            ],
+            '_3' => null,
+            '_4' => 7.7,
+            '_5' => 'foo text',
+        ];
+
+        $this->assertTrue(ArrayHelper::contains(7.7, $input));
+        $this->assertFalse(ArrayHelper::contains('unknown', $input));
+    }
+
+    public function testSearchKey()
+    {
+        $input = [
+            '_1' => [
+                '_1.1' => false
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => true,
+                    'name' => 'Tom',
+                    'lastname' => 'Sawyer',
+                ]
+            ],
+            '_3' => null,
+            'city' => 7.7,
+            'name' => 'Huckleberry',
+            'lastname' => 'Finn'
+        ];
+
+        $this->assertContains('Tom', ArrayHelper::searchByKey('name',$input, $keys));
+        $this->assertSame(['_2', '_2.1', 'name',], $keys);
+
+        // not
+        $keys = [];
+        $this->assertEmpty(ArrayHelper::searchByKey('unknown', $input, $keys));
+        $this->assertEmpty($keys);
+
+        // regexp
+        $keys = [];
+        $this->assertContains('Sawyer', ArrayHelper::pregSearchByKey('/^last/',$input, $keys));
+        $this->assertSame(['_2', '_2.1', 'lastname',], $keys);
+    }
+
+
+    public function testSearchAll()
+    {
+        $input = [
+            '_1' => [
+                '_1.1' => false
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => true,
+                    '_2.1.2' => 7.7,
+                    '_2.1.3' => 'foo text',
+                ]
+            ],
+            '_3' => null,
+            '_4' => 7.7,
+            '_5' => 'foo text',
+        ];
+
+
+        $actual = ArrayHelper::searchAll(7.7,$input, $keys);
+        $this->assertContains('_2.1.2', $actual[0]);
+        $this->assertContains('_4', $actual[1]);
+        $this->assertSame(['_2', '_2.1', '_2.1.2',], $keys[0]['_2.1.2']);
+        $this->assertSame(['_4',], $keys[1]['_4']);
+
+        // not
+        $keys = [];
+        $this->assertEmpty(ArrayHelper::searchAll('unknown',$input, $keys));
+        $this->assertEmpty($keys);
+
+        // regexp
+        $keys = [];
+        $actual = ArrayHelper::pregSearchAll('/text$/',$input, $keys);
+        $this->assertContains('_2.1.3', $actual[0]);
+        $this->assertContains('_5', $actual[1]);
+        $this->assertSame(['_2', '_2.1', '_2.1.3',], $keys[0]['_2.1.3']);
+        $this->assertSame(['_5',], $keys[1]['_5']);
+    }
+
+    public function testSearchAllKeys()
+    {
+        $input = [
+            '_1' => [
+                '_1.1' => false
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => true,
+                    'name' => 'Tom',
+                    'lastname' => 'Sawyer',
+                ]
+            ],
+            '_3' => null,
+            'city' => 7.7,
+            'name' => 'Huckleberry',
+            'lastname' => 'Finn'
+        ];
+
+        $actual = ArrayHelper::searchAllByKey('name',$input, $keys);
+        $this->assertContains('Tom', $actual[0]);
+        $this->assertContains('Huckleberry', $actual[1]);
+        $this->assertSame(['_2', '_2.1', 'name',], $keys[0]['name']);
+        $this->assertSame(['name'], $keys[1]['name']);
+
+        // not
+        $keys = [];
+        $this->assertEmpty(ArrayHelper::searchAllByKey('unknown', $input, $keys));
+        $this->assertEmpty($keys);
+
+        // regexp
+        $keys = [];
+        $actual = ArrayHelper::pregSearchAllByKey('/^last/',$input, $keys);
+        $this->assertContains('Sawyer', $actual[0]);
+        $this->assertContains('Finn', $actual[1]);
+        $this->assertSame(['_2', '_2.1', 'lastname',], $keys[0]['lastname']);
+        $this->assertSame(['lastname',], $keys[1]['lastname']);
+    }
+
+    public function testDepth()
+    {
+        $input = [
+            '_1' => [
+                '_1.1' => 'foo'
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => ['test']
+                ]
+            ]
+        ];
+
+        $this->assertSame(3, ArrayHelper::depth($input));
+        $this->assertSame(1, ArrayHelper::depth($input, true));
+    }
+
+    public function testToType()
+    {
+        $input = [
+            '_1' => [
+                '_1.1' => 'false'
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => ['true'],
+                    '_2.1.2' => ['7.7'],
+                ]
+            ],
+            '_3' => 'null',
+            '_4' => 7
+        ];
+
+        $expected = [
+            '_1' => [
+                '_1.1' => false
+            ],
+            '_2' => [
+                '_2.1' => [
+                    '_2.1.1' => [true],
+                    '_2.1.2' => [7.7],
+                ]
+            ],
+            '_3' => null,
+            '_4' => 7
+        ];
+
+        $this->assertSame($expected, ArrayHelper::toType($input));
+    }
+
+    public function testGroup()
+    {
+        $input = [
+          ['id' => '123', 'name' => 'aaa', 'class' => 'x'],
+          ['id' => '124', 'name' => 'bbb', 'class' => 'x'],
+          ['id' => '345', 'name' => 'ccc', 'class' => 'y'],
+        ];
+
+        $expected = [
+         '123' => 'aaa',
+          '124' => 'bbb',
+          '345' => 'ccc',
+        ];
+        $this->assertSame($expected, ArrayHelper::group($input, 'id', ['name']));
+
+        $expected = [
+            'x' => [
+                '123' => 'aaa',
+                '124' => 'bbb',
+            ],
+            'y' => [
+                '345' => 'ccc',
+            ],
+        ];
+        $this->assertSame($expected, ArrayHelper::group($input, 'id', 'name', 'class'));
+    }
+
+    public function testFilterColumn()
+    {
+        $input = [
+            '_1' => ['id' => '123', 'name' => 'aaa', 'class' => 'x'],
+            '_2' => ['id' => '124', 'name' => 'bbb', 'class' => 'x'],
+            '_3' => ['id' => '345', 'name' => 'ccc', 'class' => 'y'],
+        ];
+        $expected = [
+            '_1' => 'aaa',
+            '_2' => 'bbb',
+            '_3' => 'ccc',
+        ];
+        $this->assertSame($expected, ArrayHelper::filterColumn($input, 'name'));
+
+        $expected = [
+            123 =>
+                [
+                    'name' => 'aaa',
+                    'class' => 'x',
+                ],
+            124 =>
+                [
+                    'name' => 'bbb',
+                    'class' => 'x',
+                ],
+            345 =>
+                [
+                    'name' => 'ccc',
+                    'class' => 'y',
+                ],
+        ];
+        $this->assertSame($expected, ArrayHelper::filterColumn($input, ['name','class'], 'id'));
+    }
+
+    public function testConcatKeyValue()
+    {
+        $input = [
+                '123' => 'aaa',
+                '124' => 'bbb',
+        ];
+
+        $this->assertSame(['123=aaa',  '124=bbb'],ArrayHelper::concatKeyValue($input));
     }
 
     public function testKeyExists()
