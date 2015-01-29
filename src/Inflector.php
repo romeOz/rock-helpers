@@ -304,6 +304,18 @@ class Inflector
     }
 
     /**
+     * Converts a word to its plural form.
+     * @param $number
+     * @param $words
+     * @return mixed
+     */
+    public static function plural($number, array $words)
+    {
+        $cases = [2, 0, 1, 1, 1, 2];
+        return $words[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)]];
+    }
+
+    /**
      * Returns the singular of the $word
      * @param string $word the english word to singularize
      * @return string Singular noun.

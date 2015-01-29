@@ -257,4 +257,22 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
         $array = ['Spain', 'France', 'Italy'];
         $this->assertEquals('Spain - France or Italy', Inflector::sentence($array, ' and ', ' or ', ' - '));
     }
+
+    /**
+     * @dataProvider pluralProvider
+     */
+    public function testPlural($number, $expected)
+    {
+        $words = ['материал', 'материала', 'материалов'];
+        $this->assertSame($expected, Inflector::plural($number , $words));
+    }
+
+    public function pluralProvider()
+    {
+        return [
+            [121, 'материал'],
+            [122, 'материала'],
+            [129, 'материалов']
+        ];
+    }
 }
