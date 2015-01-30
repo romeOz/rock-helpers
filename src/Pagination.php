@@ -39,7 +39,7 @@ class Pagination
         $sort = SORT_ASC,
         $pageLimit = self::PAGE_LIMIT
     ) {
-        if (empty($count) || !is_numeric($count) || !is_numeric($pageLimit)) {
+        if (empty($count)) {
             return [];
         }
 
