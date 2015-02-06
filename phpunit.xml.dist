@@ -27,6 +27,7 @@
             <file>./src/ObjectHelperException.php</file>
             <file>./src/SerializeException.php</file>
             <file>./src/JsonException.php</file>
+            <file>./src/InstanceException.php</file>
         </blacklist>
     </filter>
     <logging>
