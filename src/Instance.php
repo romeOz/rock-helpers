@@ -25,8 +25,11 @@ class Instance
                 unset($config['class']);
             }
 
-            if ($throwException && !class_exists($className)) {
-                throw new InstanceException(InstanceException::UNKNOWN_CLASS, ['class' =>$className]);
+            if (!class_exists($className)) {
+                if ($throwException) {
+                    throw new InstanceException(InstanceException::UNKNOWN_CLASS, ['class' =>$className]);
+                }
+                return null;
             }
             return new $className($config);
         }

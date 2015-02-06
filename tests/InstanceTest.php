@@ -20,6 +20,11 @@ class InstanceTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(InstanceException::className());
         Instance::ensure('unknown', 'unknown');
     }
+
+    public function testEnsureReturnNull()
+    {
+        $this->assertNull(Instance::ensure('unknown', 'unknown', false));
+    }
 }
 
 class Ensure {
