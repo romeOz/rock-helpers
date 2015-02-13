@@ -16,6 +16,9 @@ class Instance
      */
     public static function ensure($reference, $className, $throwException = true)
     {
+        if (is_object($reference)) {
+            return $reference;
+        }
         if (isset($reference) && class_exists('\rock\di\Container')) {
             return \rock\di\Container::load($reference);
         } else {
