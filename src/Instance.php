@@ -9,12 +9,12 @@ class Instance
 {
     /**
      * @param object|string|array|static $reference an object or a reference to the desired object.
-     * @param string $className name of class
+     * @param string|null $className name of class
      * @param bool $throwException
      * @return ObjectInterface
      * @throws InstanceException
      */
-    public static function ensure($reference, $className, $throwException = true)
+    public static function ensure($reference, $className = null, $throwException = true)
     {
         if (is_object($reference)) {
             return $reference;
@@ -25,6 +25,9 @@ class Instance
             $config = [];
             if (is_array($reference)) {
                 $config = $reference;
+                if (!isset($className)) {
+                    $className = $config['class'];
+                }
                 unset($config['class']);
             }
 
