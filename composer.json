@@ -15,10 +15,6 @@
             "email": "serggalka@gmail.com"
         }
     ],
-    "repositories": [{
-        "type": "vcs",
-        "url": "https://github.com/romeOz/rock-base"
-    }],
     "require": {
         "php": ">=5.4.0",
         "romeoz/rock-base" : "*@dev"
@@ -33,7 +29,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+          "dev-master": "0.9-dev"
         }
     }
 }
