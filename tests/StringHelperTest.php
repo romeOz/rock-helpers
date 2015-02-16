@@ -14,9 +14,9 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerValue
      */
-    public function testReplace($value, array $dataReplace, $removeBraces = true, $result)
+    public function testReplace($value, array $placeholders, $removeBraces = true, $result)
     {
-        $this->assertSame($result, StringHelper::replace($value, $dataReplace, $removeBraces));
+        $this->assertSame($result, StringHelper::replace($value, $placeholders, $removeBraces));
     }
 
     public function providerValue()
@@ -29,6 +29,8 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
             ['hello {{unknown}} !!!', ['name'=> 'world'], true,'hello  !!!'],
             ['hello {value} !!!', [], true, 'hello  !!!'],
             ['hello {{unknown}} !!!', ['name'=> 'world'], false,'hello {{unknown}} !!!'],
+            ['hello {{name}} !!!', ['name'=> ['Tom']], false,'hello ["Tom"] !!!'],
+            ['class name {{class}}', ['class'=> new Foo], false,'class name '. get_class(new Foo())],
         ];
     }
 
@@ -397,4 +399,10 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(StringHelper::endsWith('string', 'nG', false));
         $this->assertTrue(StringHelper::endsWith('BüЯйΨ', 'ÜяЙΨ', false));
     }
+}
+
+
+class Foo
+{
+
 }

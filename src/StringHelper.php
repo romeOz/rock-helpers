@@ -439,7 +439,7 @@ class StringHelper
                             $pattern,
                             function($match) use ($placeholders, $removeBraces) {
                                 if (isset($placeholders[$match[1]])) {
-                                    return $placeholders[$match[1]];
+                                    return self::_preparePlaceholder($placeholders[$match[1]]);
                                 } elseif ($removeBraces){
                                     return '';
                                 }
@@ -539,5 +539,15 @@ class StringHelper
         } else {
             return mb_strtolower(mb_substr($string, -$bytes, null, '8bit'), $ecoding) === mb_strtolower($with, $ecoding);
         }
+    }
+
+    private static function  _preparePlaceholder($placeholder)
+    {
+        if (is_object($placeholder)) {
+            return get_class($placeholder);
+        } elseif (is_array($placeholder)) {
+            return Json::encode($placeholder);
+        }
+        return $placeholder;
     }
 }
