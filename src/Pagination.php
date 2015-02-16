@@ -16,7 +16,7 @@ class Pagination
     const SORT = SORT_ASC;
     const LIMIT = 10;
     const PAGE_LIMIT = 5;
-    const PAGE_VAR = 'page';
+    const PAGE_ARG_URL = 'page';
 
     /**
      * Get array of pages.
