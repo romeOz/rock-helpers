@@ -20,7 +20,7 @@ class Instance
             return $reference;
         }
         if (isset($reference) && class_exists('\rock\di\Container')) {
-            return \rock\di\Container::load($reference);
+            return \rock\di\Container::load($reference, $throwException);
         } else {
             $config = [];
             if (is_array($reference)) {
