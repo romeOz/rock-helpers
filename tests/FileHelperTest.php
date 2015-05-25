@@ -130,6 +130,7 @@ class FileHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("..{$ds}a", FileHelper::normalizePath('././..\\a'));
         $this->assertEquals("..{$ds}a", FileHelper::normalizePath('./..\\a/../a'));
         $this->assertEquals("..{$ds}b", FileHelper::normalizePath('./..\\a/../b'));
+        $this->assertEquals(".{$ds}..{$ds}a{$ds}..{$ds}a", FileHelper::normalizePath('./..\\a/../a', DIRECTORY_SEPARATOR, false));
     }
 
     public function testSizeToBytes()
