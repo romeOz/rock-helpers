@@ -28,13 +28,18 @@ class FileHelper
      *
      * @param string $path the file/directory path to be normalized
      * @param string $ds the directory separator to be used in the normalized result. Defaults to `DIRECTORY_SEPARATOR`.
+     * @param bool $clearRelative
      * @return string the normalized file/directory path
      */
-    public static function normalizePath($path, $ds = DIRECTORY_SEPARATOR)
+    public static function normalizePath($path, $ds = DIRECTORY_SEPARATOR, $clearRelative = true)
     {
         $path = rtrim(strtr($path, ['/' => $ds, '\\' => $ds]), $ds);
         if (strpos($ds . $path, "{$ds}.") === false && strpos($path, "{$ds}{$ds}") === false) {
             return $path;
+        }
+        if (!$clearRelative) {
+            $path = preg_replace('#'.DIRECTORY_SEPARATOR.'+#', DIRECTORY_SEPARATOR, $path);
+            return $path === '' ? '.' : $path;
         }
         // the path may contain ".", ".." or double slashes, need to clean them up
         $parts = [];
