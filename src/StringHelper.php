@@ -460,7 +460,7 @@ class StringHelper
     public static function isRegexp(&$subject)
     {
         $subject = trim($subject);
-        if (strstr($subject, '~')) {
+        if (isset($subject[0]) && $subject[0] === '~') {
             $subject = ltrim($subject, '~');
             return true;
         }
