@@ -483,6 +483,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
             ],
             'admin' => [
                 'lastname' => 'romeo',
+                'firstname' => null
             ],
         ];
         $callback = function($value){
@@ -491,13 +492,17 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
             }
             return $value;
         };
+
         $this->assertSame('Tom', ArrayHelper::updateValue($array, ['post', 'author', 'name'], $callback)['post']['author']['name']);
 
         // condition is false
         $this->assertSame('1337', ArrayHelper::updateValue($array, ['post', 'author', 'profile', 'title'], $callback)['post']['author']['profile']['title']);
 
+        $this->assertSame('Tom', ArrayHelper::updateValue($array, ['admin', 'firstname'], function(){return 'Tom';})['admin']['firstname']);
+
         // unknown
         $this->assertSame($array, ArrayHelper::updateValue($array, [], $callback));
+        $this->assertSame($array, ArrayHelper::updateValue($array, ['admin', 'firstname', 'unknown'], function(){return 'Tom';}, false));
     }
 
     public function testUpdateValueThrowException()

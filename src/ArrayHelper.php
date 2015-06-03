@@ -122,15 +122,18 @@ class ArrayHelper
         return $array;
     }
 
-    public static function updateValue(array $array, array $keys, callable $callback /* , $args... */)
+    public static function updateValue(array $array, array $keys, callable $callback, $throwException = true /* , $args... */)
     {
-        $args = array_slice(func_get_args(), 3);
+        $args = array_slice(func_get_args(), 4);
         if (!$keys) {
             return $array;
         }
         $current = &$array;
         foreach ($keys as $key) {
-            if (!is_array($current) || !Helper::getValue($current[$key])) {
+            if (!is_array($current) || !array_key_exists($key, $current)) {
+                if (!$throwException) {
+                    return $array;
+                }
                 throw new ArrayException(
                     sprintf(
                         'Did not find path %s in structure %s',
