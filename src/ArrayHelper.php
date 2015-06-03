@@ -95,11 +95,11 @@ class ArrayHelper
     }
 
     /**
-     * Set value in array.
+     * Set value to array.
      *
-     * @param array        $array
-     * @param array|string $keys  chain keys of the array element
-     * @param mixed        $value value of array
+     * @param array        $array current array.
+     * @param array|string $keys  chain keys of the array element.
+     * @param mixed        $value value of array.
      * @return array
      */
     public static function setValue(array &$array, $keys, $value = null)
@@ -122,6 +122,16 @@ class ArrayHelper
         return $array;
     }
 
+    /**
+     * Update value in array.
+     *
+     * @param array $array current array.
+     * @param array $keys chain keys of the array element.
+     * @param callable $callback callback is modify.
+     * @param bool $throwException
+     * @return array
+     * @throws ArrayException
+     */
     public static function updateValue(array $array, array $keys, callable $callback, $throwException = true /* , $args... */)
     {
         $args = array_slice(func_get_args(), 4);
