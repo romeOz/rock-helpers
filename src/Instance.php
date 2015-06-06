@@ -29,11 +29,13 @@ class Instance
                     $className = $config['class'];
                 }
                 unset($config['class']);
+            } elseif (is_string($reference) && !isset($className)) {
+                $className = $reference;
             }
 
             if (!class_exists($className)) {
                 if ($throwException) {
-                    throw new InstanceException(InstanceException::UNKNOWN_CLASS, ['class' =>$className]);
+                    throw new InstanceException(InstanceException::UNKNOWN_CLASS, ['class' => $className]);
                 }
                 return null;
             }

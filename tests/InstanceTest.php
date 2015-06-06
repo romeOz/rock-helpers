@@ -14,6 +14,9 @@ class InstanceTest extends \PHPUnit_Framework_TestCase
         $instance = Instance::ensure('ensure', Ensure::className());
         $this->assertInstanceOf(Ensure::className(), $instance);
 
+        $instance = Instance::ensure(Ensure::className());
+        $this->assertInstanceOf(Ensure::className(), $instance);
+
         // as object
         $instance = Instance::ensure(new Ensure(), Ensure::className());
         $this->assertInstanceOf(Ensure::className(), $instance);
