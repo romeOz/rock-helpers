@@ -26,6 +26,8 @@ class SerializeTest extends \PHPUnit_Framework_TestCase
         // true
         $this->assertTrue(Serialize::is(serialize(['foo', 'bar'])));
         $this->assertTrue(Serialize::is(serialize(false)));
+        $this->assertTrue(Serialize::is(serialize('')));
+        $this->assertTrue(Serialize::is(serialize([])));
 
         //false
         $this->assertFalse(Serialize::is('foo'));

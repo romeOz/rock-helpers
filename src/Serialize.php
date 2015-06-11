@@ -66,13 +66,13 @@ class Serialize implements SerializeInterface
     }
 
     /**
-     * Validation is serialized
+     * Validation is serialized.
      *
      * @param string $value
      * @return bool
      */
     public static function is($value)
     {
-        return is_string($value) && ($value === 'b:0;' || @unserialize($value));
+        return is_string($value) && ($value === 'b:0;' || @unserialize($value) !== false);
     }
 }
