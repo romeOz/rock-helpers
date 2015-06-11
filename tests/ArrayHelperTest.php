@@ -25,16 +25,16 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
     public function providerToArray()
     {
         return [
-            [
-                [
-                    (object)['id', 'title', 'title1'],
-                    (object)['id', 'title', 'title2'],
-                ],
-                [
-                    [],
-                    [],
-                ],
-            ],
+//            [
+//                [
+//                    (object)['id', 'title', 'title1'],
+//                    (object)['id', 'title', 'title2'],
+//                ],
+//                [
+//                    [],
+//                    [],
+//                ],
+//            ],
             [
                 [
                     'name' => 'Tom',
