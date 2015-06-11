@@ -69,6 +69,9 @@ class ArrayHelper
         if (empty($array)) {
             return $default;
         }
+        if (empty($key)) {
+            return $array;
+        }
         if ($key instanceof \Closure) {
             return $key($array, $default);
         }
@@ -95,11 +98,11 @@ class ArrayHelper
     }
 
     /**
-     * Set value to array.
+     * Set value in array.
      *
-     * @param array        $array current array.
-     * @param array|string $keys  chain keys of the array element.
-     * @param mixed        $value value of array.
+     * @param array        $array
+     * @param array|string $keys  chain keys of the array element
+     * @param mixed        $value value of array
      * @return array
      */
     public static function setValue(array &$array, $keys, $value = null)
