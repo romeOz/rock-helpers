@@ -1045,6 +1045,11 @@ class ArrayHelper
             $next = array_shift($args);
             foreach ($next as $k => $v) {
                 if (is_integer($k)) {
+                    if (is_subclass_of($v, '\rock\core\Properties')) {
+                        $res = [];
+                        $res[] = $v;
+                        continue;
+                    }
                     isset($res[$k]) ? $res[] = $v : $res[$k] = $v;
                 } elseif (is_array($v) && isset($res[$k]) && is_array($res[$k])) {
                     $res[$k] = self::merge($res[$k], $v);
