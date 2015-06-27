@@ -35,7 +35,7 @@ class Instance
 
             if (!class_exists($className)) {
                 if ($throwException) {
-                    throw new InstanceException(InstanceException::UNKNOWN_CLASS, ['class' => $className]);
+                    throw new InstanceException(InstanceException::UNKNOWN_CLASS, ['class' => Helper::getValue($className, 'null', true)]);
                 }
                 return null;
             }
