@@ -210,14 +210,15 @@ class StringHelper
 
     /**
      * Begin trim words (or)
-     * @param string      $string
-     * @param array $words
-     * @return string
      *
      * ```php
      * StringHelper::ltrimWord('foo text', ['foo', 'bar']); // ' text'
      * StringHelper::ltrimWord('bar text', ['foo', 'bar']); // ' text'
      * ```
+     *
+     * @param string      $string
+     * @param array $words
+     * @return string
      */
     public static function ltrimWords($string, array $words)
     {
@@ -436,17 +437,17 @@ class StringHelper
 
         if (strpos($string, '{') !== false) {
             return trim(preg_replace_callback(
-                            $pattern,
-                            function($match) use ($placeholders, $removeBraces) {
-                                if (isset($placeholders[$match[1]])) {
-                                    return self::_preparePlaceholder($placeholders[$match[1]]);
-                                } elseif ($removeBraces){
-                                    return '';
-                                }
-                                return $match[0];
-                            },
-                            $string
-                        ));
+                $pattern,
+                function($match) use ($placeholders, $removeBraces) {
+                    if (isset($placeholders[$match[1]])) {
+                        return self::_preparePlaceholder($placeholders[$match[1]]);
+                    } elseif ($removeBraces){
+                        return '';
+                    }
+                    return $match[0];
+                },
+                $string
+            ));
         }
         return $string;
     }
@@ -539,6 +540,40 @@ class StringHelper
         } else {
             return mb_strtolower(mb_substr($string, -$bytes, null, '8bit'), $ecoding) === mb_strtolower($with, $ecoding);
         }
+    }
+
+    /**
+     * Convert variables to string.
+     *
+     * ```php
+     * StringHelper::toString(true); // "true"
+     * StringHelper::toString('bar text', "'"); // "'bar text'"
+     * ```
+     *
+     * @param mixed $value
+     * @param string|null $quote
+     * @param int $serializer
+     * @return string
+     */
+    public static function toString($value, $quote = null, $serializer = Serialize::SERIALIZE_JSON)
+    {
+        if ($value === true) {
+            return 'true';
+        }
+
+        if ($value === false) {
+            return 'false';
+        }
+
+        if (is_string($value) && is_string($quote)) {
+            return $quote . $value . $quote;
+        }
+
+        if (is_array($value)) {
+            return Serialize::serialize($value, $serializer);
+        }
+
+        return $value;
     }
 
     private static function  _preparePlaceholder($placeholder)

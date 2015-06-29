@@ -399,6 +399,16 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(StringHelper::endsWith('string', 'nG', false));
         $this->assertTrue(StringHelper::endsWith('BüЯйΨ', 'ÜяЙΨ', false));
     }
+
+    public function testToString()
+    {
+        $this->assertSame("text", StringHelper::toString('text'));
+        $this->assertSame("'text'", StringHelper::toString('text', "'"));
+        $this->assertSame("true", StringHelper::toString(true));
+        $this->assertSame("false", StringHelper::toString(false));
+        $this->assertSame('["foo"]', StringHelper::toString(['foo']));
+        $this->assertSame(5, StringHelper::toString(5));
+    }
 }
 
 

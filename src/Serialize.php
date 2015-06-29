@@ -10,12 +10,12 @@ namespace rock\helpers;
 class Serialize implements SerializeInterface
 {
     /**
-     * Serialize
+     * Serialize.
      *
      * @param array $value
      * @param int   $serializer
-     * @param int   $options - constants by JSON
-     * @return array|string
+     * @param int   $options constants by JSON
+     * @return string
      */
     public static function serialize(array $value, $serializer = self::SERIALIZE_PHP, $options = 0)
     {
