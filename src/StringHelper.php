@@ -263,14 +263,14 @@ class StringHelper
     /**
      * Check contains word or char in string.
      *
-     * @param string     $string
-     * @param string     $contains
+     * @param string $string
+     * @param string $contains
      * @param bool $caseSensitive Case sensitive search. Default is false.
+     * @param string $encoding
      * @return bool
      */
-    public static function contains($string, $contains, $caseSensitive = false)
+    public static function contains($string, $contains, $caseSensitive = false, $encoding = 'UTF-8')
     {
-        $encoding = 'UTF-8';
         if ($caseSensitive === false) {
             return false !== mb_stripos($string, $contains, 0, $encoding);
         }
@@ -278,20 +278,20 @@ class StringHelper
     }
 
     /**
-     * Translate characters or replace substrings (case insensitive version of strtr).
+     * Translate characters or replace sub-strings (case insensitive version of strtr).
      *
      * @param string $string
      * @param string|array $from
      * @param string|null $to
-     * @link http://php.net/manual/ru/function.strtr.php#82051
+     * @param string $encoding
      * @return string
+     * @link http://php.net/manual/ru/function.strtr.php#82051
      */
-    public static function stritr($string, $from, $to = null)
+    public static function stritr($string, $from, $to = null, $encoding = 'UTF-8')
     {
         if(function_exists('stritr')) {
             return stritr($string, $from, $to);
         }
-        $encoding = 'UTF-8';
         if (is_string($from) ){
             $to = strval($to);
             $from = mb_substr($from, 0, min(mb_strlen($from, $encoding), mb_strlen($to, $encoding)), $encoding);
@@ -501,18 +501,18 @@ class StringHelper
      * @param string $string Input string
      * @param string $with Part to search
      * @param bool $caseSensitive Case sensitive search. Default is true.
+     * @param string $encoding
      * @return bool Returns true if first input starts with second input, false otherwise
      */
-    public static function startsWith($string, $with, $caseSensitive = true)
+    public static function startsWith($string, $with, $caseSensitive = true, $encoding = 'UTF-8')
     {
         if (!$bytes = static::byteLength($with)) {
             return true;
         }
-        $ecoding = 'UTF-8';
         if ($caseSensitive) {
             return strncmp($string, $with, $bytes) === 0;
         } else {
-            return mb_strtolower(mb_substr($string, 0, $bytes, '8bit'), $ecoding) === mb_strtolower($with, $ecoding);
+            return mb_strtolower(mb_substr($string, 0, $bytes, '8bit'), $encoding) === mb_strtolower($with, $encoding);
         }
     }
 
@@ -523,14 +523,14 @@ class StringHelper
      * @param string $string
      * @param string $with
      * @param bool $caseSensitive Case sensitive search. Default is true.
+     * @param string $encoding
      * @return bool Returns true if first input ends with second input, false otherwise
      */
-    public static function endsWith($string, $with, $caseSensitive = true)
+    public static function endsWith($string, $with, $caseSensitive = true, $encoding = 'UTF-8')
     {
         if (!$bytes = static::byteLength($with)) {
             return true;
         }
-        $ecoding = 'UTF-8';
         if ($caseSensitive) {
             // Warning check, see http://php.net/manual/en/function.substr-compare.php#refsect1-function.substr-compare-returnvalues
             if (static::byteLength($string) < $bytes) {
@@ -538,7 +538,7 @@ class StringHelper
             }
             return substr_compare($string, $with, -$bytes, $bytes) === 0;
         } else {
-            return mb_strtolower(mb_substr($string, -$bytes, null, '8bit'), $ecoding) === mb_strtolower($with, $ecoding);
+            return mb_strtolower(mb_substr($string, -$bytes, null, '8bit'), $encoding) === mb_strtolower($with, $encoding);
         }
     }
 
