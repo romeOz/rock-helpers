@@ -13,7 +13,7 @@ class Helper implements SerializeInterface
      *
      * @param mixed $value
      * @param mixed $default if value is empty
-     * @param bool  $isset check as isset
+     * @param bool $isset check as isset
      * @return null
      */
     public static function getValue(&$value, $default = null, $isset = false)
@@ -21,16 +21,16 @@ class Helper implements SerializeInterface
         if ($isset) {
             return isset($value) ? $value : $default;
         }
-        return $value ? : $default;
+        return $value ?: $default;
     }
 
     /**
      * If value don't empty then update via callable.
      *
-     * @param mixed    $value
+     * @param mixed $value
      * @param callable $callback
-     * @param mixed     $default
-     * @param bool     $isset check as isset
+     * @param mixed $default
+     * @param bool $isset check as isset
      * @return mixed|null
      */
     public static function update(&$value, callable $callback, $default = null, $isset = false)
@@ -75,13 +75,13 @@ class Helper implements SerializeInterface
     {
         if (is_null($value)) {
             return null;
-        }elseif (is_array($value)) {
+        } elseif (is_array($value)) {
             return [];
         } elseif (is_string($value)) {
             return '';
         } elseif (is_int($value)) {
             return 0;
-        } elseif (is_float($value)){
+        } elseif (is_float($value)) {
             return 0.0;
         } elseif (is_object($value) && !$value instanceof \Closure) {
             if (method_exists($value, 'reset')) {

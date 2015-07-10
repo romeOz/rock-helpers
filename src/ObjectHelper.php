@@ -14,9 +14,9 @@ class ObjectHelper
      * Set value.
      *
      * @param object $object
-     * @param array  $keys
-     * @param mixed  $value
-     * @param bool   $throwException
+     * @param array $keys
+     * @param mixed $value
+     * @param bool $throwException
      * @return object
      * @throws ObjectHelperException
      */
@@ -51,7 +51,7 @@ class ObjectHelper
      * Convert multi-array in object.
      *
      * @param array $array
-     * @param bool  $recursive
+     * @param bool $recursive
      * @return object|null
      */
     public static function toObject(array $array, $recursive = false)
@@ -101,8 +101,8 @@ class ObjectHelper
     /**
      * Configures an object with the initial property values.
      *
-     * @param object $object     the object to be configured
-     * @param array  $properties the property initial values given in terms of name-value pairs.
+     * @param object $object the object to be configured
+     * @param array $properties the property initial values given in terms of name-value pairs.
      */
     public static function setProperties($object, array $properties)
     {
@@ -112,7 +112,7 @@ class ObjectHelper
     }
 
     /**
-     * @param array  $data
+     * @param array $data
      * @param string $separator
      * @return array|\stdClass
      */
@@ -191,8 +191,8 @@ class ObjectHelper
      * Get result method (dynamic args).
      *
      * @param object|string $object
-     * @param string        $method_name name of method
-     * @param array         $args        args of method
+     * @param string $method_name name of method
+     * @param array $args args of method
      * @return mixed
      */
     public static function call($object, $method_name, array $args = null)

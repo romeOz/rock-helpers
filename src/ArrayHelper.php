@@ -57,11 +57,11 @@ class ArrayHelper
      * $street = ArrayHelper::get($users, 'address.street');
      * ```
      *
-     * @param array|object          $array   array or object to extract value from
-     * @param string|array|callable $key     key name of the array element, or property name of the object,
+     * @param array|object $array array or object to extract value from
+     * @param string|array|callable $key key name of the array element, or property name of the object,
      *                                       or an anonymous function returning the value. The anonymous function signature should be:
      *                                       `function($array, $defaultValue)`.
-     * @param mixed                 $default the default value to be returned if the specified key does not exist
+     * @param mixed $default the default value to be returned if the specified key does not exist
      * @return mixed the value of the element if found, default value otherwise
      */
     public static function getValue($array, $key, $default = null)
@@ -100,9 +100,9 @@ class ArrayHelper
     /**
      * Set value in array.
      *
-     * @param array        $array
-     * @param array|string $keys  chain keys of the array element
-     * @param mixed        $value value of array
+     * @param array $array
+     * @param array|string $keys chain keys of the array element
+     * @param mixed $value value of array
      * @return array
      */
     public static function setValue(array &$array, $keys, $value = null)
@@ -174,8 +174,8 @@ class ArrayHelper
      * // result: ['options' => [1, 2]]
      * ```
      *
-     * @param array        $array the array to extract value from
-     * @param array|string $keys  chain keys of the array element
+     * @param array $array the array to extract value from
+     * @param array|string $keys chain keys of the array element
      * @return mixed|null the value of the element if found, default value otherwise
      */
     public static function removeValue(array &$array, $keys)
@@ -200,7 +200,7 @@ class ArrayHelper
      * Filter values of array.
      * Note: if callback is null, then removed all the null values in array.
      *
-     * @param array           $array
+     * @param array $array
      * @param callable|string $function
      * @return array
      */
@@ -231,10 +231,10 @@ class ArrayHelper
     /**
      * Convert object to multi-array (recursive).
      *
-     * @param mixed $value   current object
-     * @param array $only    list of items whose value needs to be returned.
+     * @param mixed $value current object
+     * @param array $only list of items whose value needs to be returned.
      * @param array $exclude list of items whose value should NOT be returned.
-     * @param bool  $unserialize
+     * @param bool $unserialize
      * @return array
      */
     public static function toArray($value, array $only = [], array $exclude = [], $unserialize = false)
@@ -267,11 +267,11 @@ class ArrayHelper
     /**
      * Map recursive.
      *
-     * @param array    $array
+     * @param array $array
      * @param callable $callback
-     * @param bool     $recursive
-     * @param int      $depth
-     * @param int      $count
+     * @param bool $recursive
+     * @param int $depth
+     * @param int $count
      * @return array
      */
     public static function map(array $array, callable $callback, $recursive = false, $depth = null, &$count = 0)
@@ -306,7 +306,7 @@ class ArrayHelper
      * // result: ['aa'=>'text', 'bb.aa' => 'text2', 'cc.aa.gg' => 'text3'];
      * ```
      *
-     * @param array  $data
+     * @param array $data
      * @param string $separator
      * @return array
      * @see http://stackoverflow.com/questions/9416661/php-multidimensional-array-to-simple-array
@@ -342,9 +342,9 @@ class ArrayHelper
      *                   ]
      * ```
      *
-     * @param array  $data
+     * @param array $data
      * @param string $separator
-     * @param bool   $recursive
+     * @param bool $recursive
      * @return array
      */
     public static function toMulti(array &$data, $separator = '.', $recursive = false)
@@ -368,9 +368,9 @@ class ArrayHelper
     /**
      * Move element of array (top, bottom).
      *
-     * @param array      $array current array
-     * @param string|int $key   key to move
-     * @param int        $move  constant
+     * @param array $array current array
+     * @param string|int $key key to move
+     * @param int $move constant
      *
      * - `MOVE_HEAD` move head
      * - `MOVE_TAIL` move tail
@@ -399,7 +399,7 @@ class ArrayHelper
      * Contains value.
      *
      * @param string $needle needle value
-     * @param array  $array  current array
+     * @param array $array current array
      * @return bool
      */
     public static function contains($needle, array $array)
@@ -411,8 +411,8 @@ class ArrayHelper
      * Search element by value.
      *
      * @param string $needle needle value
-     * @param array  $array  current array
-     * @param array  $keys   trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function search($needle, array $array, array &$keys = null)
@@ -426,8 +426,8 @@ class ArrayHelper
      * Search all elements by value.
      *
      * @param string $needle needle value
-     * @param array  $array  current array
-     * @param array  $keys   trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function searchAll($needle, array $array, array &$keys = null)
@@ -441,8 +441,8 @@ class ArrayHelper
      * Search element by key.
      *
      * @param string $needle needle key
-     * @param array  $array  current array
-     * @param array  $keys   trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function searchByKey($needle, array $array, array &$keys = null)
@@ -456,8 +456,8 @@ class ArrayHelper
      * Search all elements by key.
      *
      * @param string $needle needle key
-     * @param array  $array  current array
-     * @param array  $keys   trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function searchAllByKey($needle, array $array, array &$keys = null)
@@ -471,8 +471,8 @@ class ArrayHelper
      * Search element by value (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
-     * @param array  $array   current array
-     * @param array  $keys    trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function pregSearch($pattern, array $array, array &$keys = null)
@@ -484,8 +484,8 @@ class ArrayHelper
      * Search all elements by value (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
-     * @param array  $array   current array
-     * @param array  $keys    trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function pregSearchAll($pattern, array $array, array &$keys = null)
@@ -497,8 +497,8 @@ class ArrayHelper
      * Search element by key (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
-     * @param array  $array   current array
-     * @param array  $keys    trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function pregSearchByKey($pattern, array $array, array &$keys = null)
@@ -510,8 +510,8 @@ class ArrayHelper
      * Search all elements by key (use RegExp-pattern).
      *
      * @param string $pattern RegExp-pattern
-     * @param array  $array   current array
-     * @param array  $keys    trace keys
+     * @param array $array current array
+     * @param array $keys trace keys
      * @return array
      */
     public static function pregSearchAllByKey($pattern, array $array, array &$keys = null)
@@ -522,10 +522,10 @@ class ArrayHelper
     /**
      * Filter by Column.
      *
-     * @param array           $array    current array
-     * @param array|string    $keys     names keys
+     * @param array $array current array
+     * @param array|string $keys names keys
      * @param string|int|null $indexKey the column to use as the index/keys for the returned array
-     * @param bool            $multi    multi-array
+     * @param bool $multi multi-array
      * @return array
      */
     public static function filterColumn(array $array, $keys = null, $indexKey = null, $multi = false)
@@ -574,8 +574,8 @@ class ArrayHelper
      * });
      * ```
      *
-     * @param array           $array the array that needs to be indexed
-     * @param string|callable $key   the column name or anonymous function whose result will be used to index the array
+     * @param array $array the array that needs to be indexed
+     * @param string|callable $key the column name or anonymous function whose result will be used to index the array
      * @return array the indexed array
      */
     public static function index($array, $key)
@@ -590,7 +590,7 @@ class ArrayHelper
     }
 
     /**
-     * @param array $keys  keys
+     * @param array $keys keys
      * @param array $array current array
      * @param mixed $default
      * @return mixed
@@ -614,9 +614,9 @@ class ArrayHelper
     /**
      * Merge key with value
      *
-     * @param array  $array     current array
+     * @param array $array current array
      * @param string $separator separator
-     * @param int    $const     constant
+     * @param int $const constant
      *
      * - `ESCAPE` escape value quotes
      *
@@ -673,7 +673,7 @@ class ArrayHelper
      * // ]
      * ```
      *
-     * @param array           $array
+     * @param array $array
      * @param string|callable $from
      * @param string|callable $to
      * @param string|callable $group
@@ -716,8 +716,8 @@ class ArrayHelper
     /**
      * Depth array.
      *
-     * @param array $array     current array
-     * @param bool  $onlyFirst check only first element
+     * @param array $array current array
+     * @param bool $onlyFirst check only first element
      * @throws ArrayException
      * @return int
      */
@@ -748,10 +748,10 @@ class ArrayHelper
      * Both the array keys and values will be encoded.
      * If a value is an array, this method will also encode it recursively.
      *
-     * @param array   $data       data to be encoded
+     * @param array $data data to be encoded
      * @param boolean $valuesOnly whether to encode array values only. If false,
      *                            both the array keys and array values will be encoded.
-     * @param string  $charset    the charset that the data is using. If not set,
+     * @param string $charset the charset that the data is using. If not set,
      * @return array the encoded data
      * @see http://www.php.net/manual/en/function.htmlspecialchars.php
      */
@@ -780,7 +780,7 @@ class ArrayHelper
      * Both the array keys and values will be decoded.
      * If a value is an array, this method will also decode it recursively.
      *
-     * @param array   $data       data to be decoded
+     * @param array $data data to be decoded
      * @param boolean $valuesOnly whether to decode array values only. If false,
      *                            both the array keys and array values will be decoded.
      * @return array the decoded data
@@ -808,14 +808,14 @@ class ArrayHelper
     /**
      * Sorts an array of objects or arrays (with the same structure) by one or several keys.
      *
-     * @param array                 $array     the array to be sorted. The array will be modified after calling this method.
-     * @param string|callable|array $key       the key(s) to be sorted by. This refers to a key name of the sub-array
+     * @param array $array the array to be sorted. The array will be modified after calling this method.
+     * @param string|callable|array $key the key(s) to be sorted by. This refers to a key name of the sub-array
      *                                         elements, a property name of the objects, or an anonymous function returning the values for comparison
      *                                         purpose. The anonymous function signature should be: `function($item)`.
      *                                         To sort by multiple keys, provide an array of keys here.
-     * @param integer|array         $direction the sorting direction. It can be either `SORT_ASC` or `SORT_DESC`.
+     * @param integer|array $direction the sorting direction. It can be either `SORT_ASC` or `SORT_DESC`.
      *                                         When sorting by multiple keys with different sorting directions, use an array of sorting directions.
-     * @param integer|array         $sortFlag  the PHP sort flag. Valid values include
+     * @param integer|array $sortFlag the PHP sort flag. Valid values include
      *                                         `SORT_REGULAR`, `SORT_NUMERIC`, `SORT_STRING`, `SORT_LOCALE_STRING`, `SORT_NATURAL` and `SORT_FLAG_CASE`.
      *                                         Please refer to [PHP manual](http://php.net/manual/en/function.sort.php)
      *                                         for more details. When sorting by multiple keys with different sort flags, use an array of sort flags.
@@ -871,9 +871,9 @@ class ArrayHelper
      * });
      * ```
      *
-     * @param array           $array
+     * @param array $array
      * @param callable|string $name
-     * @param boolean         $keepKeys whether to maintain the array keys. If false, the resulting array
+     * @param boolean $keepKeys whether to maintain the array keys. If false, the resulting array
      *                                  will be re-indexed with integers.
      * @return array the list of column values
      */
@@ -899,8 +899,8 @@ class ArrayHelper
      * This method enhances the `array_key_exists()` function by supporting case-insensitive
      * key comparison.
      *
-     * @param string  $key           the key to check
-     * @param array   $array         the array with keys to check
+     * @param string $key the key to check
+     * @param array $array the array with keys to check
      * @param boolean $caseSensitive whether the key comparison should be case-sensitive
      * @return boolean whether the array contains the specified key
      */
@@ -927,7 +927,7 @@ class ArrayHelper
      *
      * Note that an empty array will NOT be considered associative.
      *
-     * @param array   $array      the array being checked
+     * @param array $array the array being checked
      * @param boolean $allStrings whether the array keys must be all strings in order for
      *                            the array to be treated as associative.
      * @return boolean whether the array is associative
@@ -964,7 +964,7 @@ class ArrayHelper
      *
      * Note that an empty array will be considered indexed.
      *
-     * @param array   $array       the array being checked
+     * @param array $array the array being checked
      * @param boolean $consecutive whether the array keys must be a consecutive sequence
      *                             in order for the array to be treated as indexed.
      * @return boolean whether the array is associative

@@ -29,7 +29,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         $data->b = 2;
         $this->assertSame('{"a":1,"b":2}', Json::encode($data));
 
-        $data = (object) null;
+        $data = (object)null;
         $this->assertSame('{}', Json::encode($data));
 
         $this->assertSame(json_encode('{"a":1,"b":2}'), Json::encode(new CustomJson(['a' => 1, 'b' => 2])));

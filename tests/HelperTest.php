@@ -26,13 +26,19 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $array = [];
-        $this->assertNull(Helper::update($array['foo']['bar'], function(){}));
-        $this->assertSame('test', Helper::update($array['foo']['bar'], function(){}, 'test'));
-        $this->assertSame('test', Helper::update($array['foo']['bar'], function(){}, 'test', true));
+        $this->assertNull(Helper::update($array['foo']['bar'], function () {
+        }));
+        $this->assertSame('test', Helper::update($array['foo']['bar'], function () {
+        }, 'test'));
+        $this->assertSame('test', Helper::update($array['foo']['bar'], function () {
+        }, 'test', true));
 
         $array['foo']['bar'] = 0;
-        $this->assertSame('test', Helper::update($array['foo']['bar'], function(){}, 'test'));
-        $this->assertSame(7, Helper::update($array['foo']['bar'], function(){return 7;}, 'test', true));
+        $this->assertSame('test', Helper::update($array['foo']['bar'], function () {
+        }, 'test'));
+        $this->assertSame(7, Helper::update($array['foo']['bar'], function () {
+            return 7;
+        }, 'test', true));
     }
 
     public function testToType()
@@ -66,11 +72,13 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 }
 
 
-class Foo {
+class Foo
+{
     public $name = 'Tom';
 }
 
-class Bar {
+class Bar
+{
     public $name = 'Tom';
 
     public function reset()

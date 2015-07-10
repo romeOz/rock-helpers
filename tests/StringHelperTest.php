@@ -22,15 +22,15 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
     public function providerValue()
     {
         return [
-            [['foo'], [],true, ['foo']],
-            ['', [],true, ''],
-            ['hello {value} !!!', ['value'=> 'world'], true, 'hello world !!!'],
-            ['hello {{name}} !!!', ['name'=> 'world'], true,'hello world !!!'],
-            ['hello {{unknown}} !!!', ['name'=> 'world'], true,'hello  !!!'],
+            [['foo'], [], true, ['foo']],
+            ['', [], true, ''],
+            ['hello {value} !!!', ['value' => 'world'], true, 'hello world !!!'],
+            ['hello {{name}} !!!', ['name' => 'world'], true, 'hello world !!!'],
+            ['hello {{unknown}} !!!', ['name' => 'world'], true, 'hello  !!!'],
             ['hello {value} !!!', [], true, 'hello  !!!'],
-            ['hello {{unknown}} !!!', ['name'=> 'world'], false,'hello {{unknown}} !!!'],
-            ['hello {{name}} !!!', ['name'=> ['Tom']], false,'hello ["Tom"] !!!'],
-            ['class name {{class}}', ['class'=> new Foo], false,'class name '. get_class(new Foo())],
+            ['hello {{unknown}} !!!', ['name' => 'world'], false, 'hello {{unknown}} !!!'],
+            ['hello {{name}} !!!', ['name' => ['Tom']], false, 'hello ["Tom"] !!!'],
+            ['class name {{class}}', ['class' => new Foo], false, 'class name ' . get_class(new Foo())],
         ];
     }
 
@@ -193,7 +193,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerContainsValid
      */
-    public function testContainsValid($contains, $input, $identical=false)
+    public function testContainsValid($contains, $input, $identical = false)
     {
         $this->assertTrue(StringHelper::contains($input, $contains, $identical));
     }
@@ -201,7 +201,7 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerContainsInvalid
      */
-    public function testContainsInvalid($contains, $input, $identical=false)
+    public function testContainsInvalid($contains, $input, $identical = false)
     {
         $this->assertFalse(StringHelper::contains($input, $contains, $identical));
     }

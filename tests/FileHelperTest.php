@@ -313,7 +313,7 @@ class FileHelperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Creates test files structure,
-     * @param array  $items    file system objects to be created in format: objectName => objectContent
+     * @param array $items file system objects to be created in format: objectName => objectContent
      *                         Arrays specifies directories, other values - files.
      * @param string $basePath structure base file path.
      */
@@ -340,8 +340,8 @@ class FileHelperTest extends \PHPUnit_Framework_TestCase
     /**
      * Asserts that file has specific permission mode.
      * @param integer $expectedMode expected file permission mode.
-     * @param string  $fileName     file name.
-     * @param string  $message      error message
+     * @param string $fileName file name.
+     * @param string $message error message
      */
     protected function assertFileMode($expectedMode, $fileName, $message = '')
     {

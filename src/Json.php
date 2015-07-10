@@ -52,7 +52,7 @@ class Json
     public static function encode($value, $options = 0)
     {
         $expressions = [];
-        $value = static::processData($value, $expressions, uniqid());
+        $value = static::processData($value);
         $json = json_encode($value, $options);
 
         return empty($expressions) ? $json : strtr($json, $expressions);
@@ -62,8 +62,8 @@ class Json
      * Converting json to array.
      *
      * @param string $json
-     * @param bool   $asArray
-     * @param bool   $throwException
+     * @param bool $asArray
+     * @param bool $throwException
      * @throws JsonException
      * @return array|null
      */
@@ -73,7 +73,7 @@ class Json
             return null;
         }
 
-        $decode = json_decode((string) $json, $asArray);
+        $decode = json_decode((string)$json, $asArray);
 
         if ($throwException === true) {
             switch (json_last_error()) {
@@ -105,7 +105,6 @@ class Json
      * Pre-processes the data before sending it to `json_encode()`.
      *
      * @param mixed $data the data to be processed
-
      * @return mixed the processed data
      */
     protected static function processData($data)

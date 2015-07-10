@@ -130,12 +130,12 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 Serialize::serialize([
-                                 'name' => 'Tom',
-                                 'orders' => [
-                                     'order_1' => ['name' => 'name_1'],
-                                     'order_2' => ['name' => 'name_2']
-                                 ],
-                             ]),
+                    'name' => 'Tom',
+                    'orders' => [
+                        'order_1' => ['name' => 'name_1'],
+                        'order_2' => ['name' => 'name_2']
+                    ],
+                ]),
                 [
                     'name' => 'Tom',
                     'orders' => [
@@ -147,12 +147,12 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 
             [
                 Json::decode(Json::encode([
-                                         'name' => 'Tom',
-                                         'orders' => [
-                                             'order_1' => ['name' => 'name_1'],
-                                             'order_2' => ['name' => 'name_2']
-                                         ],
-                                     ]), false),
+                    'name' => 'Tom',
+                    'orders' => [
+                        'order_1' => ['name' => 'name_1'],
+                        'order_2' => ['name' => 'name_2']
+                    ],
+                ]), false),
                 [
                     'name' => 'Tom',
                     'orders' => [
@@ -165,9 +165,9 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 (object)[
                     'name' => 'Tom',
                     'orders' => (object)[
-                            'order_1' => ['name' => 'name_1'],
-                            'order_2' => ['name' => 'name_2']
-                        ],
+                        'order_1' => ['name' => 'name_1'],
+                        'order_2' => ['name' => 'name_2']
+                    ],
                 ],
                 [
                     'name' => 'Tom',
@@ -181,9 +181,9 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 (object)[
                     'name' => 'Tom',
                     'orders' => (object)[
-                            'order_1' => Json::encode(['name' => 'name_1']),
-                            'order_2' => Json::encode(['name' => 'name_2'])
-                        ],
+                        'order_1' => Json::encode(['name' => 'name_1']),
+                        'order_2' => Json::encode(['name' => 'name_2'])
+                    ],
                 ],
                 [
                     'name' => 'Tom',
@@ -259,7 +259,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
     public function providerToArrayHHVM()
     {
         $result = $this->providerToArray();
-        $result[0] =             [
+        $result[0] = [
             [
                 (object)['id', 'title', 'title1'],
                 (object)['id', 'title', 'title2'],
@@ -295,7 +295,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testToMulti($expected, $actual, $recursive = false)
     {
-        $this->assertEquals(ArrayHelper::toMulti($expected, '.', $recursive),$actual);
+        $this->assertEquals(ArrayHelper::toMulti($expected, '.', $recursive), $actual);
     }
 
     public function providerToMulti()
@@ -319,7 +319,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                     'bb' => ['aa' => 'text2'],
                     'cc' => [
                         'aa' =>
-                            ['gg' => ['aa' => ['bb'=>'text3']]]
+                            ['gg' => ['aa' => ['bb' => 'text3']]]
                     ]
                 ],
                 true
@@ -331,7 +331,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                     'bb' => ['aa' => 'text2'],
                     'cc' => [
                         'aa' =>
-                            ['gg' => ['aa' => ['aa'=> ['bb'=>'text3']]]]
+                            ['gg' => ['aa' => ['aa' => ['bb' => 'text3']]]]
                     ]
                 ],
                 true
@@ -344,7 +344,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                     'bb' => ['aa' => 'text2'],
                     'cc' => [
                         'aa' =>
-                            ['gg' => ['aa' => ['aa'=> ['bb'=>'text3']]]]
+                            ['gg' => ['aa' => ['aa' => ['bb' => 'text3']]]]
                     ],
                     ['dd' => ['bb' => ['aa' => ['cc' => 'text3']]]]
                 ],
@@ -354,7 +354,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 ['aa' => 'text', 'bb.aa' => 'text2', 'bb.cc' => ['dd' => ['gg.aa' => 'text3']]],
                 [
                     'aa' => 'text',
-                    'bb' => ['aa' => 'text2', 'cc' => ['dd' => ['gg'=> ['aa'=> 'text3']]]],
+                    'bb' => ['aa' => 'text2', 'cc' => ['dd' => ['gg' => ['aa' => 'text3']]]],
 
                 ],
                 true
@@ -486,7 +486,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 'firstname' => null
             ],
         ];
-        $callback = function($value){
+        $callback = function ($value) {
             if ($value == 'romeo') {
                 return 'Tom';
             }
@@ -498,11 +498,15 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         // condition is false
         $this->assertSame('1337', ArrayHelper::updateValue($array, ['post', 'author', 'profile', 'title'], $callback)['post']['author']['profile']['title']);
 
-        $this->assertSame('Tom', ArrayHelper::updateValue($array, ['admin', 'firstname'], function(){return 'Tom';})['admin']['firstname']);
+        $this->assertSame('Tom', ArrayHelper::updateValue($array, ['admin', 'firstname'], function () {
+            return 'Tom';
+        })['admin']['firstname']);
 
         // unknown
         $this->assertSame($array, ArrayHelper::updateValue($array, [], $callback));
-        $this->assertSame($array, ArrayHelper::updateValue($array, ['admin', 'firstname', 'unknown'], function(){return 'Tom';}, false));
+        $this->assertSame($array, ArrayHelper::updateValue($array, ['admin', 'firstname', 'unknown'], function () {
+            return 'Tom';
+        }, false));
     }
 
     public function testUpdateValueThrowException()
@@ -522,7 +526,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 'lastname' => 'romeo',
             ],
         ];
-        $callback = function($value){
+        $callback = function ($value) {
             if ($value == 'romeo') {
                 return 'Tom';
             }
@@ -646,11 +650,11 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         ];
 
 
-        $this->assertArrayHasKey('_2.1.2', ArrayHelper::search(7.7,$input, $keys));
+        $this->assertArrayHasKey('_2.1.2', ArrayHelper::search(7.7, $input, $keys));
         $this->assertSame(['_2', '_2.1', '_2.1.2',], $keys);
 
         $keys = [];
-        $this->assertArrayHasKey('_1.1', ArrayHelper::search(null,$input, $keys));
+        $this->assertArrayHasKey('_1.1', ArrayHelper::search(null, $input, $keys));
         $this->assertSame(['_1', '_1.1'], $keys);
 
         // not
@@ -660,7 +664,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 
         // regexp
         $keys = [];
-        $this->assertArrayHasKey('_2.1.3', ArrayHelper::pregSearch('/text$/',$input, $keys));
+        $this->assertArrayHasKey('_2.1.3', ArrayHelper::pregSearch('/text$/', $input, $keys));
         $this->assertSame(['_2', '_2.1', '_2.1.3',], $keys);
     }
 
@@ -705,7 +709,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
             'lastname' => 'Finn'
         ];
 
-        $this->assertContains('Tom', ArrayHelper::searchByKey('name',$input, $keys));
+        $this->assertContains('Tom', ArrayHelper::searchByKey('name', $input, $keys));
         $this->assertSame(['_2', '_2.1', 'name',], $keys);
 
         // not
@@ -715,7 +719,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 
         // regexp
         $keys = [];
-        $this->assertContains('Sawyer', ArrayHelper::pregSearchByKey('/^last/',$input, $keys));
+        $this->assertContains('Sawyer', ArrayHelper::pregSearchByKey('/^last/', $input, $keys));
         $this->assertSame(['_2', '_2.1', 'lastname',], $keys);
     }
 
@@ -739,7 +743,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         ];
 
 
-        $actual = ArrayHelper::searchAll(7.7,$input, $keys);
+        $actual = ArrayHelper::searchAll(7.7, $input, $keys);
         $this->assertContains('_2.1.2', $actual[0]);
         $this->assertContains('_4', $actual[1]);
         $this->assertSame(['_2', '_2.1', '_2.1.2',], $keys[0]['_2.1.2']);
@@ -747,12 +751,12 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 
         // not
         $keys = [];
-        $this->assertEmpty(ArrayHelper::searchAll('unknown',$input, $keys));
+        $this->assertEmpty(ArrayHelper::searchAll('unknown', $input, $keys));
         $this->assertEmpty($keys);
 
         // regexp
         $keys = [];
-        $actual = ArrayHelper::pregSearchAll('/text$/',$input, $keys);
+        $actual = ArrayHelper::pregSearchAll('/text$/', $input, $keys);
         $this->assertContains('_2.1.3', $actual[0]);
         $this->assertContains('_5', $actual[1]);
         $this->assertSame(['_2', '_2.1', '_2.1.3',], $keys[0]['_2.1.3']);
@@ -778,7 +782,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
             'lastname' => 'Finn'
         ];
 
-        $actual = ArrayHelper::searchAllByKey('name',$input, $keys);
+        $actual = ArrayHelper::searchAllByKey('name', $input, $keys);
         $this->assertContains('Tom', $actual[0]);
         $this->assertContains('Huckleberry', $actual[1]);
         $this->assertSame(['_2', '_2.1', 'name',], $keys[0]['name']);
@@ -791,7 +795,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
 
         // regexp
         $keys = [];
-        $actual = ArrayHelper::pregSearchAllByKey('/^last/',$input, $keys);
+        $actual = ArrayHelper::pregSearchAllByKey('/^last/', $input, $keys);
         $this->assertContains('Sawyer', $actual[0]);
         $this->assertContains('Finn', $actual[1]);
         $this->assertSame(['_2', '_2.1', 'lastname',], $keys[0]['lastname']);
@@ -851,15 +855,15 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
     public function testGroup()
     {
         $input = [
-          ['id' => '123', 'name' => 'aaa', 'class' => 'x'],
-          ['id' => '124', 'name' => 'bbb', 'class' => 'x'],
-          ['id' => '345', 'name' => 'ccc', 'class' => 'y'],
+            ['id' => '123', 'name' => 'aaa', 'class' => 'x'],
+            ['id' => '124', 'name' => 'bbb', 'class' => 'x'],
+            ['id' => '345', 'name' => 'ccc', 'class' => 'y'],
         ];
 
         $expected = [
-         '123' => 'aaa',
-          '124' => 'bbb',
-          '345' => 'ccc',
+            '123' => 'aaa',
+            '124' => 'bbb',
+            '345' => 'ccc',
         ];
         $this->assertSame($expected, ArrayHelper::group($input, 'id', ['name']));
 
@@ -906,17 +910,17 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                     'class' => 'y',
                 ],
         ];
-        $this->assertSame($expected, ArrayHelper::filterColumn($input, ['name','class'], 'id'));
+        $this->assertSame($expected, ArrayHelper::filterColumn($input, ['name', 'class'], 'id'));
     }
 
     public function testConcatKeyValue()
     {
         $input = [
-                '123' => 'aaa',
-                '124' => 'bbb',
+            '123' => 'aaa',
+            '124' => 'bbb',
         ];
 
-        $this->assertSame(['123=aaa',  '124=bbb'],ArrayHelper::concatKeyValue($input));
+        $this->assertSame(['123=aaa', '124=bbb'], ArrayHelper::concatKeyValue($input));
     }
 
     public function testKeyExists()
@@ -1073,19 +1077,19 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['abc', 'def'], $result);
     }
 
-   public function testIntersectByKeys()
+    public function testIntersectByKeys()
     {
-        $this->assertSame(ArrayHelper::intersectByKeys(['foo'=> 'foo', 'bar' => 'bar'], ['bar']), ['bar' => 'bar']);
+        $this->assertSame(ArrayHelper::intersectByKeys(['foo' => 'foo', 'bar' => 'bar'], ['bar']), ['bar' => 'bar']);
     }
 
     public function testDiffByKeys()
     {
-        $this->assertSame(ArrayHelper::diffByKeys(['foo'=> 'foo', 'bar' => 'bar'], ['bar']), ['foo' => 'foo']);
+        $this->assertSame(ArrayHelper::diffByKeys(['foo' => 'foo', 'bar' => 'bar'], ['bar']), ['foo' => 'foo']);
     }
 
     public function testMap()
     {
-        $callback = function() {
+        $callback = function () {
             return 'test';
         };
         $this->assertSame(ArrayHelper::map(['foo' => 'foo', 'bar' => 'bar'], $callback, false, 1), ['foo' => 'test', 'bar' => 'bar']);

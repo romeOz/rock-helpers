@@ -40,7 +40,7 @@ class TraceTest extends \PHPUnit_Framework_TestCase
         $iterator->next();
         $this->assertSame(
             $iterator->current(),
-            array (
+            array(
                 'foo' => 'test',
                 'exception' => 'text',
             )

@@ -88,7 +88,7 @@ class Trace
      * ```
      *
      * @param string $category
-     * @param mixed  $token
+     * @param mixed $token
      */
     public static function trace($category, $token)
     {

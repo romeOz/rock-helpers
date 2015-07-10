@@ -36,9 +36,9 @@ class StringHelper
     /**
      * Truncates a string to the number of characters specified.
      *
-     * @param string  $string The string to truncate.
+     * @param string $string The string to truncate.
      * @param integer $length How many characters from original string to include into truncated string.
-     * @param string  $suffix String to append to the end of truncated string.
+     * @param string $suffix String to append to the end of truncated string.
      * @param string $encoding The charset to use, defaults to charset currently used by application.
      * @return string
      */
@@ -59,16 +59,17 @@ class StringHelper
     /**
      * Truncates a string to the number of words specified.
      *
-     * @param string  $string The string to truncate.
+     * @param string $string The string to truncate.
      * @param integer $length How many words from original string to include into truncated string.
-     * @param string  $suffix String to append to the end of truncated string.
+     * @param string $suffix String to append to the end of truncated string.
      * @param string $encoding The charset to use, defaults to charset currently used by application.
      * @return string
      */
     public static function truncateWords($string, $length = 100, $suffix = '...', $encoding = 'UTF-8')
     {
         if (empty($string) || $length === 0 ||
-            mb_strlen($string, $encoding) <= $length) {
+            mb_strlen($string, $encoding) <= $length
+        ) {
             return $string;
         }
         $string = mb_substr($string, 0, $length, $encoding);
@@ -153,7 +154,7 @@ class StringHelper
     /**
      * Encodes special characters into HTML entities.
      *
-     * @param string  $content      the content to be encoded
+     * @param string $content the content to be encoded
      * @param boolean $doubleEncode whether to encode HTML entities in `$content`. If false,
      *                              HTML entities in `$content` will not be further encoded.
      * @param string $encoding The charset to use, defaults to charset currently used by application.
@@ -216,24 +217,24 @@ class StringHelper
      * StringHelper::ltrimWord('bar text', ['foo', 'bar']); // ' text'
      * ```
      *
-     * @param string      $string
+     * @param string $string
      * @param array $words
      * @return string
      */
     public static function ltrimWords($string, array $words)
     {
-        return static::trimPattern($string, '/^('.implode('|', $words).')\\s?/u');
+        return static::trimPattern($string, '/^(' . implode('|', $words) . ')\\s?/u');
     }
 
     /**
      * End trim words (or)
-     * @param string      $string
+     * @param string $string
      * @param array $words
      * @return string
      */
     public static function rtrimWords($string, array $words)
     {
-        return static::trimPattern($string, '/\\s?('.implode('|', $words).')$/u');
+        return static::trimPattern($string, '/\\s?(' . implode('|', $words) . ')$/u');
     }
 
     /**
@@ -252,7 +253,7 @@ class StringHelper
      *
      * @param string $string
      * @param string $pattern regexp pattern.
-     * @param int       $limit
+     * @param int $limit
      * @return string
      */
     public static function trimPattern($string, $pattern, $limit = -1)
@@ -289,24 +290,24 @@ class StringHelper
      */
     public static function stritr($string, $from, $to = null, $encoding = 'UTF-8')
     {
-        if(function_exists('stritr')) {
+        if (function_exists('stritr')) {
             return stritr($string, $from, $to);
         }
-        if (is_string($from) ){
+        if (is_string($from)) {
             $to = strval($to);
             $from = mb_substr($from, 0, min(mb_strlen($from, $encoding), mb_strlen($to, $encoding)), $encoding);
             $to = mb_substr($to, 0, min(mb_strlen($from, $encoding), mb_strlen($to, $encoding)), $encoding);
             $product = strtr($string, (mb_strtoupper($from, $encoding) . mb_strtolower($from, $encoding)), ($to . $to));
             return $product;
-        } elseif(is_array($from)){
+        } elseif (is_array($from)) {
             $pos1 = 0;
             $product = $string;
-            while(count($from) > 0){
+            while (count($from) > 0) {
                 $positions = [];
-                foreach($from as $_from => $to){
-                    if(($pos2 = mb_stripos($product, $_from, $pos1, $encoding)) === false){
+                foreach ($from as $_from => $to) {
+                    if (($pos2 = mb_stripos($product, $_from, $pos1, $encoding)) === false) {
                         unset($from[$_from]);
-                    } else{
+                    } else {
                         $positions[$_from] = $pos2;
                     }
                 }
@@ -331,7 +332,7 @@ class StringHelper
      */
     public static function randChars($length = 6)
     {
-        $chars     = [
+        $chars = [
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
             'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
@@ -359,8 +360,8 @@ class StringHelper
     public static function replaceRandChars($string, $replaceTo = '*')
     {
         $chars = preg_split('/(?<!^)(?!$)/u', $string);
-        $count     = count($chars);
-        $len       = ceil($count / 2);
+        $count = count($chars);
+        $len = ceil($count / 2);
         while ($len > 0) {
             $index = mt_rand(0, $count - 1);
             if ($chars[$index] === $replaceTo) {
@@ -388,8 +389,8 @@ class StringHelper
 
     /**
      * Concat begin
-     * @param string     $value
-     * @param string     $concat
+     * @param string $value
+     * @param string $concat
      * @param null $default
      * @return null|string
      *
@@ -405,8 +406,8 @@ class StringHelper
 
     /**
      * Concat end.
-     * @param string     $value
-     * @param string     $concat
+     * @param string $value
+     * @param string $concat
      * @param null $default
      * @return null|string
      *
@@ -423,9 +424,9 @@ class StringHelper
     /**
      * Replace.
      *
-     * @param string $string      string.
-     * @param array  $placeholders array placeholders for replace.
-     * @param bool   $removeBraces        remove braces `{{...}}`.
+     * @param string $string string.
+     * @param array $placeholders array placeholders for replace.
+     * @param bool $removeBraces remove braces `{{...}}`.
      * @param string $pattern pattern for replace.
      * @return string
      */
@@ -438,10 +439,10 @@ class StringHelper
         if (strpos($string, '{') !== false) {
             return trim(preg_replace_callback(
                 $pattern,
-                function($match) use ($placeholders, $removeBraces) {
+                function ($match) use ($placeholders, $removeBraces) {
                     if (isset($placeholders[$match[1]])) {
                         return self::_preparePlaceholder($placeholders[$match[1]]);
-                    } elseif ($removeBraces){
+                    } elseif ($removeBraces) {
                         return '';
                     }
                     return $match[0];

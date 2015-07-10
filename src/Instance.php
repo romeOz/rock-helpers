@@ -42,7 +42,7 @@ class Instance
             }
             if (!empty($args)) {
                 $reflect = new \ReflectionClass($defaultClass);
-                $args = array_merge($args,  $config ? [$config] : $config);
+                $args = array_merge($args, $config ? [$config] : $config);
                 return $reflect->newInstanceArgs($reflect->getConstructor() ? $args : []);
             }
             return new $defaultClass($config);

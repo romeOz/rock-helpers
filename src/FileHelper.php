@@ -38,7 +38,7 @@ class FileHelper
             return $path;
         }
         if (!$clearRelative) {
-            $path = preg_replace('#'.DIRECTORY_SEPARATOR.'+#', DIRECTORY_SEPARATOR, $path);
+            $path = preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
             return $path === '' ? '.' : $path;
         }
         // the path may contain ".", ".." or double slashes, need to clean them up
@@ -60,10 +60,10 @@ class FileHelper
      * Create of file.
      *
      * @param string $pathFile path to file.
-     * @param string $value    value.
-     * @param int    $const    constant for `file_put_contents`.
-     * @param bool   $recursive
-     * @param int    $mode     the permission to be set for the created file.
+     * @param string $value value.
+     * @param int $const constant for `file_put_contents`.
+     * @param bool $recursive
+     * @param int $mode the permission to be set for the created file.
      * @return bool
      */
     public static function create($pathFile, $value = "", $const = 0, $recursive = true, $mode = 0775)
@@ -132,7 +132,7 @@ class FileHelper
      * file paths, php's `basename()` should work fine for you.
      * Note: this method is not aware of the actual filesystem, or path components such as `..`.
      *
-     * @param string $path   A path string.
+     * @param string $path A path string.
      * @param string $suffix If the name component ends in suffix this will also be cut off.
      * @return string the trailing name component of the given path.
      * @see http://www.php.net/manual/en/function.basename.php
@@ -179,10 +179,10 @@ class FileHelper
      * [finfo_open](http://php.net/manual/en/function.finfo-open.php). If this doesn't work, it will
      * fall back to {@see \rock\helpers\FileHelper::getMimeTypeByExtension()}
      *
-     * @param string $file           the file name.
-     * @param string $magicFile      name of the optional magic database file, usually something like `/path/to/magic.mime`.
+     * @param string $file the file name.
+     * @param string $magicFile name of the optional magic database file, usually something like `/path/to/magic.mime`.
      *                               This will be passed as the second parameter to [finfo_open](http://php.net/manual/en/function.finfo-open.php).
-     * @param bool   $checkExtension whether to use the file extension to determine the MIME type in case
+     * @param bool $checkExtension whether to use the file extension to determine the MIME type in case
      *                               `finfo_open()` cannot determine it.
      * @return string|false the MIME type (e.g. `text/plain`). Null is returned if the MIME type cannot be determined.
      */
@@ -209,7 +209,7 @@ class FileHelper
      *
      * This method will use a local map between extension names and MIME types.
      *
-     * @param string $file      the file name.
+     * @param string $file the file name.
      * @param string $magicFile the path of the file that contains all available MIME type information.
      *                          If this is not set, the default file aliased by `@rock/helpers/mimeTypes.php` will be used.
      * @return string the MIME type. Null is returned if the MIME type cannot be determined.
@@ -232,7 +232,7 @@ class FileHelper
      *
      * This method will use a local map between extension names and MIME types.
      *
-     * @param string $mimeType  file MIME type.
+     * @param string $mimeType file MIME type.
      * @param string $magicFile the path of the file that contains all available MIME type information.
      *                          If this is not set, the default file aliased by `@rock/helpers/mimeTypes.php` will be used.
      * @return array the extensions corresponding to the specified MIME type
@@ -251,9 +251,9 @@ class FileHelper
      * it uses `chmod()` to set the permission of the created directory
      * in order to avoid the impact of the `umask` setting.
      *
-     * @param string  $path      path of the directory to be created.
-     * @param integer $mode      the permission to be set for the created directory.
-     * @param bool    $recursive whether to create parent directories if they do not exist.
+     * @param string $path path of the directory to be created.
+     * @param integer $mode the permission to be set for the created directory.
+     * @param bool $recursive whether to create parent directories if they do not exist.
      * @return bool whether the directory is created successfully
      */
     public static function createDirectory($path, $mode = 0775, $recursive = true)
@@ -396,8 +396,8 @@ class FileHelper
     /**
      * Checks if the given file path satisfies the filtering options.
      *
-     * @param string $path    the path of the file or directory to be checked
-     * @param array  $options the filtering options.
+     * @param string $path the path of the file or directory to be checked
+     * @param array $options the filtering options.
      * @return bool whether the file or directory satisfies the filtering options.
      */
     public static function filterPath($path, $options)

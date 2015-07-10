@@ -46,11 +46,13 @@ class InstanceTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class Ensure {
+class Ensure
+{
     use ObjectTrait;
 }
 
-class InstanceArgs {
+class InstanceArgs
+{
 
     use ObjectTrait {
         ObjectTrait::__construct as parentConstruct;

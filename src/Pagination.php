@@ -21,15 +21,15 @@ class Pagination
     /**
      * Get array of pages.
      *
-     * @param int      $count     total count of items
+     * @param int $count total count of items
      * @param int|null $pageCurrent
-     * @param int      $sort      sort pages:
+     * @param int $sort sort pages:
      *
      * - `SORT_ASC` - asc (by default)
      * - `SORT_DESC` - desc
      *
-     * @param int      $limit     limit items
-     * @param int      $pageLimit limit pages
+     * @param int $limit limit items
+     * @param int $pageLimit limit pages
      * @return array
      */
     public static function get(
@@ -38,7 +38,8 @@ class Pagination
         $limit = self::LIMIT,
         $sort = SORT_ASC,
         $pageLimit = self::PAGE_LIMIT
-    ) {
+    )
+    {
         if (empty($count)) {
             return [];
         }
@@ -52,7 +53,7 @@ class Pagination
         // DESC
         if ($sort === SORT_DESC) {
             static::sortDESC($result, $pageCurrent, $pageCount, $pageLimit, $limit);
-        // ASC
+            // ASC
         } else {
             static::sortASC($result, $pageCurrent, $pageCount, $pageLimit, $limit);
         }

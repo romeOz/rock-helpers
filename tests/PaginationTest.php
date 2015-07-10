@@ -26,7 +26,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
             'limit' => 10,
             'countMore' => 0,
         ];
-        $this->assertSame($expected, Pagination::get(7,1));
+        $this->assertSame($expected, Pagination::get(7, 1));
 
         $expected = [
             'pageCount' => 5,
@@ -69,10 +69,10 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
             'limit' => 5,
             'countMore' => 2,
         ];
-        $this->assertSame($expected, Pagination::get(7,null,5));
-        $this->assertSame($expected, Pagination::get(7,0,5));
-        $this->assertSame($expected, Pagination::get(7,-1,5));
-        $this->assertSame($expected, Pagination::get(7,'foo',5));
+        $this->assertSame($expected, Pagination::get(7, null, 5));
+        $this->assertSame($expected, Pagination::get(7, 0, 5));
+        $this->assertSame($expected, Pagination::get(7, -1, 5));
+        $this->assertSame($expected, Pagination::get(7, 'foo', 5));
 
         // next page
         $expected = [

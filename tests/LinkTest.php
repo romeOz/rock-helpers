@@ -34,8 +34,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($excpected, Link::serialize([
             Link::REL_SELF => 'http://site/',
             'first' => 'http://site/',
-            'prev'=>'http://site/',
-            'next' =>'http://site/?page=48',
+            'prev' => 'http://site/',
+            'next' => 'http://site/?page=48',
             'last' => 'http://site/?page=1',
         ]));
     }

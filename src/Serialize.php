@@ -13,8 +13,8 @@ class Serialize implements SerializeInterface
      * Serialize.
      *
      * @param array $value
-     * @param int   $serializer
-     * @param int   $options constants by JSON
+     * @param int $serializer
+     * @param int $options constants by JSON
      * @return string
      */
     public static function serialize(array $value, $serializer = self::SERIALIZE_PHP, $options = 0)
@@ -24,7 +24,7 @@ class Serialize implements SerializeInterface
 
     /**
      * @param mixed $value
-     * @param bool  $throwException
+     * @param bool $throwException
      * @throws SerializeException
      * @return mixed
      */
@@ -56,7 +56,7 @@ class Serialize implements SerializeInterface
         if (is_array($value)) {
             return ArrayHelper::map(
                 $value,
-                function($value){
+                function ($value) {
                     return static::unserializeRecursive($value);
                 },
                 true

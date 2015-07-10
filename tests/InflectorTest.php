@@ -264,7 +264,7 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
     public function testPlural($number, $expected)
     {
         $words = ['материал', 'материала', 'материалов'];
-        $this->assertSame($expected, Inflector::plural($number , $words));
+        $this->assertSame($expected, Inflector::plural($number, $words));
     }
 
     public function pluralProvider()
