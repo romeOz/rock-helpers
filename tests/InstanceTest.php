@@ -24,6 +24,14 @@ class InstanceTest extends \PHPUnit_Framework_TestCase
         // as Config
         $instance = Instance::ensure(['class' => Ensure::className()]);
         $this->assertInstanceOf(Ensure::className(), $instance);
+
+        $instance = Instance::ensure(['class' => InstanceArgs::className(), 'foo' => 'foo test'], null, ['bar test']);
+        $this->assertSame('foo test', $instance->foo);
+        $this->assertSame('bar test', $instance->bar);
+
+        $instance = Instance::ensure(['class' => InstanceArgs::className(), 'foo' => 'foo test'], InstanceArgs::className(), ['bar test']);
+        $this->assertSame('foo test', $instance->foo);
+        $this->assertSame('bar test', $instance->bar);
     }
 
     public function testEnsureThrowException()
@@ -34,10 +42,27 @@ class InstanceTest extends \PHPUnit_Framework_TestCase
 
     public function testEnsureReturnNull()
     {
-        $this->assertNull(Instance::ensure('unknown', 'unknown', false));
+        $this->assertNull(Instance::ensure('unknown', 'unknown', [], false));
     }
 }
 
 class Ensure {
     use ObjectTrait;
+}
+
+class InstanceArgs {
+
+    use ObjectTrait {
+        ObjectTrait::__construct as parentConstruct;
+    }
+
+    public $foo;
+    public $bar;
+
+    public function __construct($bar, array $config = [])
+    {
+        $this->parentConstruct($config);
+        $this->bar = $bar;
+    }
+
 }
