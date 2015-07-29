@@ -176,13 +176,15 @@ class Trace
      *
      * @param $category
      * @param $token
+     * @return float|null
      */
     public static function endProfile($category, $token)
     {
         $hash = static::getHash($token);
         if (isset(static::$traces[$category][$hash]['time'])) {
-            static::$traces[$category][$hash]['time'] = microtime(true) - static::$traces[$category][$hash]['time'];
+            return static::$traces[$category][$hash]['time'] = microtime(true) - static::$traces[$category][$hash]['time'];
         }
+        return null;
     }
 
     protected static function getHash($token)
