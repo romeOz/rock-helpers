@@ -12,7 +12,7 @@ class Instance
      * @param string|null $defaultClass default name of class
      * @param array $args arguments of constructor.
      * @param bool $throwException
-     * @return ObjectInterface
+     * @return ObjectInterface|null
      * @throws InstanceException
      */
     public static function ensure($reference, $defaultClass = null, array $args = [], $throwException = true)
