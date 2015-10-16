@@ -30,7 +30,7 @@ class Instance
                     $defaultClass = $config['class'];
                 }
                 unset($config['class']);
-            } elseif ((is_string($reference) && !isset($defaultClass)) || !isset($reference)) {
+            } elseif (is_string($reference) && !isset($defaultClass)) {
                 $defaultClass = $reference;
             }
 
