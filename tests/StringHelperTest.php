@@ -22,7 +22,6 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
     public function providerValue()
     {
         return [
-            [['foo'], [], true, ['foo']],
             ['', [], true, ''],
             ['hello {value} !!!', ['value' => 'world'], true, 'hello world !!!'],
             ['hello {{name}} !!!', ['name' => 'world'], true, 'hello world !!!'],
