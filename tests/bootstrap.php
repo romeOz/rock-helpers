@@ -11,7 +11,6 @@ $loader->addPsr4('rockunit\\', __DIR__);
 
 Alias::setAlias('rockunit', __DIR__);
 
-require(dirname(__DIR__) . '/src/polyfills.php');
 $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = 'site.com';
 $_SERVER['REQUEST_URI'] = '/';
 date_default_timezone_set('UTC');
