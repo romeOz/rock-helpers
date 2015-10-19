@@ -430,7 +430,7 @@ class StringHelper
      * @param string $pattern pattern for replace.
      * @return string
      */
-    public static function replace($string, array $placeholders = [], $removeBraces = true, $pattern = '/\{{1,2}(\\w+)\}{1,2}/')
+    public static function replace($string, array $placeholders = [], $removeBraces = true, $pattern = '/\{{1,2}([\\w\.]+)\}{1,2}/')
     {
         if (strpos($string, '{') !== false) {
             return trim(preg_replace_callback(
