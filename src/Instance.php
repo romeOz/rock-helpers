@@ -8,11 +8,26 @@ use rock\base\ObjectInterface;
 class Instance
 {
     /**
+     * Configure instance.
+     * @param object $instance
+     * @param array $config name-value pairs that will be used to initialize the object properties
+     */
+    public static function configure($instance, array $config = [])
+    {
+        foreach ($config as $name => $value) {
+            if (is_callable($value) && is_array($value) && is_subclass_of($value[0], '\rock\core\Properties')) {
+                $value = call_user_func($value, $instance);
+            }
+            $instance->$name = $value;
+        }
+    }
+
+    /**
      * @param object|string|array|static $reference an object or a reference to the desired object.
      * @param string|null $defaultClass default name of class
      * @param array $args arguments of constructor.
      * @param bool $throwException
-     * @return ObjectInterface|null
+     * @return ObjectInterface
      * @throws InstanceException
      */
     public static function ensure($reference, $defaultClass = null, array $args = [], $throwException = true)

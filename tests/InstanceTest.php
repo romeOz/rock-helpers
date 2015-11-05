@@ -10,6 +10,15 @@ use rock\helpers\InstanceException;
 
 class InstanceTest extends \PHPUnit_Framework_TestCase
 {
+    public function testConfigure()
+    {
+        $instance = new InstanceArgsWithoutInterface();
+        $this->assertNull($instance->foo);
+
+        $instance = new InstanceArgsWithoutInterface('baz', ['foo' => 'footest']);
+        $this->assertSame('footest', $instance->foo);
+    }
+
     public function testEnsure()
     {
         $instance = Instance::ensure('ensure', Ensure::className());
