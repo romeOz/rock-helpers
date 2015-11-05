@@ -1045,7 +1045,7 @@ class ArrayHelper
             $next = array_shift($args);
             foreach ($next as $k => $v) {
                 if (is_integer($k)) {
-                    if (is_subclass_of($v, '\rock\core\Properties')) {
+                    if (is_subclass_of($v, '\rock\base\Configure')) {
                         $res = [];
                         $res[] = $v;
                         continue;
