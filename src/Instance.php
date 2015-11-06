@@ -15,9 +15,6 @@ class Instance
     public static function configure($instance, array $config = [])
     {
         foreach ($config as $name => $value) {
-            if (is_callable($value) && is_array($value) && is_subclass_of($value[0], '\rock\core\Properties')) {
-                $value = call_user_func($value, $instance);
-            }
             $instance->$name = $value;
         }
     }
